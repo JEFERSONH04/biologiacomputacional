@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Perfil de usuario {% endblock %}
+
+{% block content %}
+
+<div class="container my-3">
+
+    <div class="mb-5 mt-5">
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
+                <div class="card-body text-center">
+                    <div class="mt-2">
+                        <img src="{{ user.profileadditionalinfo.image.url }}"
+                            class="rounded-circle border border-2 border-secondary shadow img-fluid"
+                            style="width: 100px;">
+                    </div>
+                    <p class="text-muted">@{{ user.username }}</p>
+                    {% if user.is_superuser %}
+                    <span class="badge rounded-1 text-bg-success mb-4">Super usuario</span>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <span class="badge rounded-1 text-bg-primary mb-4">Administrador</span>
+                    {% endif %}
+                    <h4 class="mb-2 text-capitalize">{{ user.first_name }} {{ user.last_name }} </h4>
+                    <p class="text-muted mb-2"> {{ user.email }} </p>
+                    <p class="text-muted"> {{ user.profileadditionalinfo.phone_number }} </p>
+
+                    <!-- Pills navs -->
+                    <ul class="nav nav-justified mt-4 mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link rounded text-bg-danger" href="{% url 'logout' %}"><i
+                                    class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
+                        </li>
+                    </ul>
+                    <!-- Pills navs -->
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-8">
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active bg-light text-black disabled" aria-disabled="true"
+                        href="{% url 'perfil' %}"><i class="fa-solid fa-circle-info text-secondary me-1"></i> Información
+                        personal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'cambio_contrasena' %}"><i
+                            class="fa-solid fa-key text-secondary me-1"></i>
+                        Cambiar contraseña</a>
+                </li>
+                {% if user.is_superuser or user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'gestion_usuarios' %}"><i
+                            class="fa-solid fa-user-gear text-secondary me-1"></i> Gestionar usuarios</a>
+                </li>
+                {% endif %}
+            </ul>
+            <!-- Fin Tabs -->
+
+            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
+                <div class="card-body text-center">
+                    <h5 class="mb-2 mt-2">Editar información</h5>
+
+                    <form method="POST" id="updateForm" enctype="multipart/form-data"> {% csrf_token %}
+                        <div class="row g-2 mt-3">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="first_name"
+                                        id="floatingInputGridFirstName" placeholder="" value="{{ user.first_name }}"
+                                        autocomplete="given-name">
+                                    <label for="floatingInputGridFirstName">Nombres</label>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="last_name"
+                                        id="floatingInputGridLastName" placeholder="" value="{{ user.last_name }}"
+                                        autocomplete="family-name">
+                                    <label for="floatingInputGridLastName">Apellidos</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-2 mt-2">
+                            <input type="email" class="form-control" name="email" id="floatingInputEmail" placeholder=""
+                                value="{{ user.email }}" autocomplete="email">
+                            <label for="floatingInputEmail">Correo electrónico</label>
+                        </div>
+
+                        <div class="form-floating mb-2 mt-2">
+                            <input type="text" class="form-control" name="phone_number" id="floatingInputTelefono"
+                                placeholder="" value="{{ user.profileadditionalinfo.phone_number }}" autocomplete="tel">
+                            <label for="floatingInputTelefono">Teléfono</label>
+                        </div>
+
+                        <!-- File input agregar imagen -->
+                        <div class="mt-3 mb-2">
+                            <label for="floatingInputPhoto" class="form-label">Ingresa una imagen</label>
+                            <input type="file" class="form-control" name="image" id="floatingInputPhoto"
+                                aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
+                        </div>
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success mt-4 mb-2" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            Actualizar información
+                        </button>
+                    </form>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Actualizar información</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que quiere actualizar la información?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-secondary" id="saveChangesBtn">Guardar
+                                        cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mb-5 mt-5">
+
+    </div>
+
+</div>
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+<!-- Fin Sistema de notificaciones Toast -->
+
+<!-- Script para escuchar boton de confirmacion de envio -->
+<script>
+    document.getElementById('saveChangesBtn').addEventListener('click', function () {
+        console.log('Intentando enviar el formulario...');
+        document.getElementById('updateForm').submit();
+    });
+</script>
+<!-- Fin Script para escuchar boton de confirmacion de envio -->
+
+{% endblock %}

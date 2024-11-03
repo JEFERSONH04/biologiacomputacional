@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Registrar usuario {% endblock %}
+
+{% block content %}
+
+<!-- Formulario de registro -->
+<div class="container ">
+    <div class="row d-flex justify-content-center align-items-center">
+
+        <div class="col-md-9 col-lg-6 col-xl-5">
+            <img src="{% static 'identity/images/login.png' %}" class="img-fluid" alt="Sample image">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1 mb-4">
+
+            <div class="text-center mb-3 mt-4">
+                <p>Registrate con</p>
+                
+                <button type="button" class="btn btn-light btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                </button>
+
+            </div>
+
+            <div class="divider d-flex align-items-center my-4">
+                <p class="text-center mx-3 mb-0">o</p>
+            </div>
+
+            <!-- Notificaciones de errores en el formulario -->
+            {% if messages %}
+            <div class="alert alert-warning" role="alert">
+                <strong>Por favor, corrige los siguientes errores:</strong>
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <!-- Fin Notificaciones de errores en el formulario -->
+
+            <form method="POST"> {% csrf_token %}
+                <!-- Entrada usuario y genero -->
+                <div class="col-md">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-circle-user"></i></span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="username" id="validationCustomUsername"
+                                placeholder="" required autocomplete="username">
+                            <label for="validationCustomUsername">Ingresa un usuario</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada correo -->
+                <div class="col-md">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" name="email" id="floatingInputGroupEmail"
+                                placeholder="email" required autocomplete="email">
+                            <label for="floatingInputGroupEmail">Ingresa un correo electrónico</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contraseña entrada 1 -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password1" id="floatingInputGroupPassword1"
+                            placeholder="Password" required>
+                        <label for="floatingInputGroupPassword1">Ingresa una contraseña</label>
+                        <button type="button" id="togglePassword1"
+                            class="btn btn-default position-absolute top-50 end-0 translate-middle-y">
+                            <i id="togglePasswordIcon1" class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contraseña entrada 2 -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password2" id="floatingInputGroupPassword2"
+                            placeholder="Password" required>
+                        <label for="floatingInputGroupPassword2">Repite la contraseña</label>
+                        <button type="button" id="togglePassword2"
+                            class="btn btn-default position-absolute top-50 end-0 translate-middle-y">
+                            <i id="togglePasswordIcon2" class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center text-lg-start mt-4 mb-4 pt-2 d-grid gap-2">
+                    <button class="btn text-white btn-block" style="background-color: #303030;">Crear cuenta
+                    </button>
+                </div>
+            </form>
+
+        </div>
+        <!-- Fin Formulario de registro -->
+
+    </div>
+</div>
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+<!-- Fin Sistema de notificaciones Toast -->
+
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock %}

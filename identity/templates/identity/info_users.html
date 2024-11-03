@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+<body>
+    {% block content %}
+    <div class="container">
+        <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 text-center">Información de Usuarios</h4>
+        <div class="row">
+            {% for info in info_users %}
+                <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 mb-4">
+                    <p>{{ info.username }}</p>
+                    <p>{{ info.first_name }}</p>
+                    <p>{{ info.last_name }}</p>
+                    <p>{{ info.is_superuser }}</p>
+                    <p>{{ info.is_staff }}</p>
+                    <p>{{ info.is_active }}</p>
+                    <p>{{ info.email }}</p>
+                    <a href="{% url 'detalle_usuarios' info.id %}">Ver detalles</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

@@ -1,0 +1,28 @@
+.strong-custom {
+  color: #38d2e0;
+}
+
+.strong-bg-custom {
+  color: #fff;
+  background-color: #505050;
+}
+
+.btn-custom {
+  background-color: #02aee8;
+  color: #ffffff;
+}
+
+.btn-custom:hover {
+  background-color: #1d02e8;
+  color: #ffffff;
+}
+
+.btn-outline-custom {
+  border-color: #38b7e0;
+  color: #38b7e0;
+}
+
+.btn-outline-custom:hover {
+  background-color: #02aee8;
+  color: #ffffff;
+}

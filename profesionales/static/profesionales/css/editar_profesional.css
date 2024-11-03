@@ -1,0 +1,7 @@
+.errorlist {
+    list-style-type: none;
+    padding: .75rem;
+    border-radius: .30rem;
+    background-color: #dc3545;
+    color: #fff;
+}

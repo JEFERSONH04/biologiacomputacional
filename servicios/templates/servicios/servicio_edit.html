@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Editar {{ servicio.nombre }} {% endblock %}
+
+{% block content %}
+
+<!-- Contenido -->
+<div class="container mt-5">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'servicios' %}" class="custom-color">Servicios</a></li>
+            <li class="breadcrumb-item">
+                {% if servicio.categoria.nombre_categoria == "Base de Datos" %}
+                <a href="{% url 'database' %}" class="custom-color">Bases de Datos</a>
+                {% elif servicio.categoria.nombre_categoria == "Herramienta" %}
+                <a href="{% url 'servicios' %}" class="custom-color">Herramienta</a>
+                {% endif %}
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'servicios_detalle' servicio.nombre %}" class="custom-color">
+                    {{ servicio.nombre }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        </ol>
+    </nav>
+
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-2 mb-4 shadow-sm text-center">
+
+        {% if form_errors %}
+        <div class="alert alert-danger mt-2" role="alert">
+            Por favor, corrige los siguientes errores:
+            <ul>
+                {% for field, errors in form_errors.items %}
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Entrada de nombre y seleccion de categoria -->
+            <div class="d-flex justify-content-center gap-2">
+                <div class="col-2">
+                    <div class="mt-4 mb-3">
+                        <input type="text" class="form-control" name="nombre" id="exampleFormControlNombreDB"
+                            placeholder="" value="{{ servicio.nombre }}" required>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <div class="mt-4 mb-3">
+                        <select class="form-select" aria-label="Default select example" name="categoria">
+                            <option selected>Selecciona una categoría</option>
+                            {% for categoria in categorias %}
+                            {% if servicio.categoria == categoria %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}" selected>
+                                {{ categoria.nombre_categoria }}</option>
+                            {% else %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}">
+                                {{ categoria.nombre_categoria }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entrada de datos -->
+            <!-- Descripcion -->
+            <div class="mb-3">
+                <textarea class="form-control" name="descrip" id="TextareaHerramienta"
+                    rows="3">{{ servicio.descrip }}</textarea>
+            </div>
+
+            <!-- Formulario para una herramienta -->
+
+            {% if servicio.categoria.nombre_categoria == 'Herramienta' %}
+            <!-- Imagen -->
+            {% if servicio.imagen_servicio %}
+            <div class="d-flex justify-content-center py-2">
+                <img src="{{ servicio.imagen_servicio.url }}" class="border border-1 rounded-4 shadow"
+                    style="height: 400px; width: 500px;" alt="">
+            </div>
+
+            <div class="container col-4 mt-3 mb-3">
+                <label for="formFileImg" class="form-label">Cambiar imagen</label>
+                <input class="form-control" name="imagen_servicio" type="file" id="formFileImg" accept="image/*">
+
+            </div>
+
+            {% else %}
+
+            <div class="d-flex justify-content-center py-2">
+                <img src="/profesionales/media/servicios-imagenes/default.png" class="rounded-4"
+                    style="height: 450px; width: 550px;" alt="">
+            </div>
+
+            <div class="container col-4 mt-3 mb-3">
+                <label for="formFileImg" class="form-label">Cambiar imagen</label>
+                <input class="form-control" name="imagen_servicio" type="file" id="formFileImg" accept="image/*">
+            </div>
+
+            {% endif %}
+
+            <!-- Entrada de video y archivos -->
+            <div class="d-flex justify-content-center border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+                <div class="d-flex gap-5 justify-content-center">
+                    <div class="col-5">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInputEnlaceVideo" class="form-label">Enlace del
+                                video</label>
+                            <input type="text" class="form-control" value="{{ servicio.video_enlace }}"
+                                name="video_enlace" id="exampleFormControlInputEnlaceVideo"
+                                placeholder="Dejar en blanco si no cuenta con un tutorial">
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="mb-3">
+                            <div class="border border-1 py-2 px-3 rounded-4 mb-3">
+                                {% if servicio.archivo %}
+                                <div class="my-1">
+                                    <p>Archivo en la base de datos</p>
+                                    <i class="fa-regular fa-folder-open fs-1 mb-2"></i>
+                                    <p class="fw-light">{{ servicio.archivo }}</p>
+                                    <input type="checkbox" name="delete_file" value="{{ servicio.archivo }}"
+                                        class="btn-check" id="btn-check" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-check"><i
+                                            class="fa-regular fa-trash-can"></i> Eliminar este
+                                        archivo</label>
+                                </div>
+                                {% else %}
+                                <p>No se encontró ningún archivo en la base de datos</p>
+                                <i class="fa-solid fa-folder fs-1"></i>
+                                {% endif %}
+                            </div>
+
+                            <label for="formFile" class="form-label">Cargar archivos</label>
+                            <input class="form-control" id="formFile" name="archivo" type="file" accept=".zip,.rar">
+                            <p class="fw-light mt-1">Archivos permitidos ZIP o RAR</p>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Entrada para autor y licencia -->
+            <div class="border border-2 bg-white rounded-4 px-4 py-3 my-3 shadow-sm">
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControldesarrolladorHE" class="form-label">Autor</label>
+                        <input type="text" class="form-control" name="desarrollador"
+                            id="exampleFormControldesarrolladorHE" placeholder="" value="{{ servicio.desarrollador }}"
+                            required>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlEnlacePerfil" class="form-label">Enlace perfil</label>
+                        <input type="url" class="form-control" value="{{ servicio.desarrollador_enlace }}"
+                            name="desarrollador_enlace" id="exampleFormControlEnlacePerfil" placeholder="">
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlLicencia" class="form-label">Nombre de la licencia</label>
+                        <input type="text" class="form-control" value="{{ servicio.nombre_licencia }}"
+                            name="nombre_licencia" id="exampleFormControlLicencia" placeholder="" required>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlEnlaceLicencia" class="form-label">Enlace licencia</label>
+                        <input type="url" class="form-control" value="{{ servicio.nombre_licencia_enlace }}"
+                            name="nombre_licencia_enlace" id="exampleFormControlEnlaceLicencia" placeholder="">
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Formulario para una base de datos -->
+            {% elif servicio.categoria.nombre_categoria == 'Base de Datos' %}
+
+            <!-- Entrada de video y archivos -->
+            <div class="d-flex justify-content-center border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+                <div class="col-8">
+                    <div class="mb-3">
+                        <div class="border border-1 py-2 px-3 rounded-4 mb-3">
+                            {% if servicio.archivo %}
+                            <div class="my-1">
+                                <p>Archivo en la base de datos</p>
+                                <i class="fa-regular fa-folder-open fs-1 mb-2"></i>
+                                <p class="fw-light">{{ servicio.archivo }}</p>
+                                <input type="checkbox" name="delete_file" value="{{ servicio.archivo }}"
+                                    class="btn-check" id="btn-check" autocomplete="off">
+                                <label class="btn btn-outline-danger" for="btn-check"><i
+                                        class="fa-regular fa-trash-can"></i> Eliminar este
+                                    archivo</label>
+                            </div>
+                            {% else %}
+                            <p>No se encontró ningún archivo en la base de datos</p>
+                            <i class="fa-solid fa-folder fs-1"></i>
+                            {% endif %}
+                        </div>
+
+                        <label for="formFileDB" class="form-label">Cargar archivos</label>
+                        <input class="form-control" id="formFileDB" name="archivo" type="file" accept=".zip,.rar">
+                        <p class="fw-light mt-1">Archivos permitidos ZIP o RAR</p>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border border-2 bg-white rounded-4 px-4 py-3 my-3 shadow-sm">
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControldesarrolladorDB" class="form-label">Autor</label>
+                        <input type="text" class="form-control" name="desarrollador"
+                            id="exampleFormControldesarrolladorDB" placeholder="" value="{{ servicio.desarrollador }}"
+                            required>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlEnlacePerfilDB" class="form-label">Enlace perfil</label>
+                        <input type="url" class="form-control" value="{{ servicio.desarrollador_enlace }}"
+                            name="desarrollador_enlace" id="exampleFormControlEnlacePerfilDB" placeholder="">
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlLicenciaDB" class="form-label">Nombre de la licencia</label>
+                        <input type="text" class="form-control" value="{{ servicio.nombre_licencia }}"
+                            name="nombre_licencia" id="exampleFormControlLicenciaDB" placeholder="" required>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label for="exampleFormControlEnlaceLicenciaDB" class="form-label">Enlace licencia</label>
+                        <input type="url" class="form-control" value="{{ servicio.nombre_licencia_enlace }}"
+                            name="nombre_licencia_enlace" id="exampleFormControlEnlaceLicenciaDB" placeholder="">
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            <button type="submit" class="btn btn-success my-2">Guardar cambios</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Selecciona todos los formularios que queremos validar
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Recorre cada formulario y previene el envío si hay campos inválidos
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+</script>
+
+{% endblock %}

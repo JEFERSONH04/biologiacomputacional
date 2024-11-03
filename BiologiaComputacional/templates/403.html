@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Permisos insuficientes{% endblock %}
+
+{% block content %}
+
+<div class="container col-md-8 text-center py-5">
+    <img src="{% static 'images/logo-color.png' %}" class="mb-4" width="90" height="75">
+    <div class="container border border-2 shadow rounded-5 py-5">
+
+        <div class="container px-5">
+            <h2 class="mb-4">Error 403</h2>
+
+            <p>Lo sentimos, no tienes los permisos suficientes para realizar esta acción.</p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

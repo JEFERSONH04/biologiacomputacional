@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %} {% endblock %} · Biologia Computacional</title>
+
+  <!-- Importe favicon -->
+  <link rel="icon" type="image/png" href="{% static 'images/bc-favicon-black.png' %}">
+
+  <!-- Importe DataTable.js -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+  <!-- Importe Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Importe Estilos -->
+  <link rel="stylesheet" href="{% static 'css/principal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/busquedaProfesional.css' %}">
+  <link rel="stylesheet" href="{% static 'css/identity.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  <link rel="stylesheet" href="{% static 'css/investigacion.css' %}">
+  <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+  <link rel="stylesheet" href="{% static 'css/editar_profesional.css' %}">
+  <link rel="stylesheet" href="{% static 'css/servicios.css' %}">
+
+
+  <!-- Importe Google Fonts (Ubuntu) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Importe Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar-custom shadow navbar navbar-expand-lg sticky-top position-fixed top-0 start-50 translate-middle-x " id="navbar">
+    <div class="container">
+      <a href="{% url 'inicio' %}" class="navbar-brand" data-bs-toggle="tooltip" data-bs-placement="right"
+        data-bs-title="Inicio">
+        <img src="{% static 'images/logo.png' %}" width="40" height="40">
+      </a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu-desplegable">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mr-auto" id="menu-desplegable">
+        <ul class="navbar-nav ms-auto">
+          {% url 'inicio' as inicio_url %}
+          {% url 'buscarProfesional' as buscarProfesional_url %}
+          {% url 'investigacion' as investigacion_url %}
+          {% url 'servicios' as servicios_url %}
+          {% url 'contactos' as contactos_url %}
+
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == inicio_url %}active{% endif %}"
+              href="{% url 'inicio' %}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == buscarProfesional_url %}active{% endif %}"
+              href="{% url 'buscarProfesional' %}">Profesionales</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == investigacion_url %}active{% endif %}"
+              href="{% url 'investigacion' %}">Investigación</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == servicios_url %}active{% endif %}"
+              href="{% url 'servicios' %}">Servicios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == contactos_url %}active{% endif %}"
+              href="{% url 'contactos' %}">Contacto</a>
+          </li>
+
+          {% if user.is_authenticated %}
+          <div class="btn-group">
+            <button class="btn btn-white text-capitalize" type="button" data-bs-toggle="dropdown"
+              data-bd-display="static" data-bs-auto-close="outside" aria-expanded="false">
+              {{ user.first_name }} <img src="{{ user.profileadditionalinfo.image.url }}"
+                class="rounded-circle border border-black" style="width: 28px; height: 28px;">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+              <li>
+                <div class="col-sm-12 px-2 d-flex flex-column justify-content-center">
+                  <strong class="dropdown-header text-capitalize">{{ user.first_name }} {{ user.last_name }}
+                    <p class="text-lowercase fw-light mb-0">{{ user.email }}</p>
+                  </strong>
+                </div>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item px-4" href="{% url 'perfil' %}"><i
+                    class="fa-solid fa-circle-info px-2 text-secondary"></i> Mi
+                  perfil</a>
+              </li>
+              <li><a class="dropdown-item px-4" href="{% url 'cambio_contrasena' %}"><i
+                    class="fa-solid fa-key px-2 text-secondary"></i> Cambiar
+                  contraseña</a>
+              </li>
+              {% if user.is_superuser or user.is_staff %}
+              <li><a class="dropdown-item px-4" href="{% url 'gestion_usuarios' %}"><i
+                    class="fa-solid fa-user-gear px-2 text-secondary"></i>
+                  Gestionar usuarios</a></li>
+              {% endif %}
+              <li><a class="dropdown-item px-4 text-danger" href="{% url 'logout' %}"><i
+                    class="fa-solid fa-arrow-right-from-bracket px-2"></i> Cerrar
+                  sesión</a></li>
+            </ul>
+          </div>
+          {% else %}
+          <li class="nav-item">
+            <a class="btn btn-white rounded-pill" href="{% url 'register' %}" role="button">
+              <span class="button-text">Registrarme</span>
+              <i class="fa-regular fa-user"></i>
+            </a>
+
+            <a class="btn btn-warning rounded-pill shadow-sm" href="{% url 'signin' %}" role="button">
+              <span class="button-text">Iniciar sesión</span>
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </a>
+          </li>
+          {% endif %}
+
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+  <!-- Fin Navbar -->
+
+  <!-- Contenido variable -->
+  {% block content %}
+
+  
+
+  {% endblock %}
+  <!-- Fin contenido variable -->
+
+  <!-- Footer-->
+  <footer class="pt-5 pb-4 footer-custom">
+    <div class="container text-center text-md-start">
+      <div class="row align-items-start col-12">
+
+        <!-- BC -->
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
+          <a href="{% url 'inicio' %}" class="navbar-brand" data-bs-toggle="tooltip" data-bs-placement="right"
+            data-bs-title="Inicio">
+            <img src="{% static 'images/logo-white.png' %}" width="45" height="35">
+          </a>
+          <p class="light-text mt-2">Laboratorio de biología computacional.</p>
+          <p>
+            <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Facebook"><i
+                class="fa-brands fa-facebook me-3 fs-3"></i></a>
+            <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Instagram"><i
+                class="fa-brands fa-instagram me-3 fs-3"></i></a>
+            <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Twitter / X"><i
+                class="fa-brands fa-x-twitter me-3 fs-3"></i></a>
+          </p>
+        </div>
+
+        <!-- Recursos -->
+        <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2">
+          <h5 class="mb-3 medium-text">Recursos</h5>
+          <p>
+            <a class="light-text" href="{% url 'inicio' %}">Inicio <span class="sr-only">(current)</span></a>
+          </p>
+          <p>
+            <a class="light-text" href="{% url 'buscarProfesional' %}">Profesionales</a>
+          </p>
+          <p>
+            <a class="light-text" href="{% url 'investigacion' %}">Investigación</a>
+          </p>
+          <p>
+            <a class="light-text" href="{% url 'servicios' %}">Servicios</a>
+          </p>
+          <p>
+            <a class="light-text" href="{% url 'contactos' %}">Contacto</a>
+          </p>
+        </div>
+
+        <!-- Información legal -->
+        <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 mb-3">
+          <h5 class="mb-3 medium-text">Información legal</h5>
+          <a href="{% url 'politicas_privacidad' %}" class="light-text">Políticas de privacidad</a>
+        </div>
+
+
+        <!-- Direccion -->
+        <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+          <h5 class="mb-3">Dirección</h5>
+          <p class="light-text">
+            Campus Universitario Lagos del Cacique <br>
+            Calle 70 No. 55-210 Bucaramanga <br>
+            PBX: +57 607 6516500
+          </p>
+        </div>
+
+        <hr class="mt-3" style="color: #ffffff;">
+
+        <div class="text-center mb-2">
+          <p>
+            Todos los derechos reservados ©
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Fin Footer-->
+
+  <!-- Importe jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+
+  <!-- Importe DataTable.js -->
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+  <!-- Importe Bootstrap JS (incluye Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+  <!-- Importe de script personalizado -->
+  <script src="{% static 'js/javascript.js' %}"></script>
+
+  <!-- Importe de Tooltip -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    });
+
+    window.addEventListener('scroll', () => {
+            const hiddenElement = document.getElementById('navbar');
+            if (window.scrollY > 400) {
+                hiddenElement.classList.add('visible');
+            } else {
+                hiddenElement.classList.remove('visible');
+            }
+        });
+  </script>
+
+</body>
+
+</html>

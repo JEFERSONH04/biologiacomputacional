@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {{ servicio.nombre }} {% endblock %}
+
+{% block content %}
+
+<!-- Contenido si es una base de datos -->
+{% if servicio.categoria.nombre_categoria == "Base de Datos" %}
+<div class="container mt-5">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'servicios' %}" class="custom-color">Servicios</a></li>
+            <li class="breadcrumb-item">
+                {% if servicio.categoria.nombre_categoria == "Base de Datos" %}
+                <a href="{% url 'database' %}" class="custom-color">Bases de Datos</a>
+                {% elif servicio.categoria.nombre_categoria == "Herramienta" %}
+                <a href="{% url 'servicios' %}" class="custom-color">Herramienta</a>
+                {% endif %}
+            </li>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ servicio.nombre }}</li>
+        </ol>
+    </nav>
+
+    <!-- Seccion nombre y dropdown -->
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-2 mb-4 shadow-sm text-center">
+        <h5 class="fw-bold mt-4 mb-3 d-flex justify-content-center align-items-center">
+            {{ servicio.nombre }}
+            {% if servicio.categoria.nombre_categoria == "Base de Datos" %}
+            <i class="fa-solid fa-database ms-1"></i>
+            {% elif servicio.categoria.nombre_categoria == "Herramienta" %}
+            <i class="fa-solid fa-gear ms-1"></i>
+            {% endif %}
+            {% if user.is_superuser or user.is_staff %}
+            <div class="dropend ms-1" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-title="Gestionar bases de datos">
+                <button class="btn btn-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'servicios_editar' servicio.nombre %}">Editar bases de datos</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <!-- Boton lanzar modal -->
+                    <li>
+                        <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdropDB">
+                            Eliminar base de datos
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </h5>
+
+        <!-- Seccion descripcion -->
+        <p class="fw-light mt-4">{{ servicio.descrip }}</p>
+
+        <!-- Seccion para archivo -->
+        <div class="d-flex justify-content-center border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+            <div class="d-flex gap-5 text-center">
+                <div class="">
+                    <p>Descarga el contenido aquí</p>
+                    {% if servicio.archivo %}
+                    <a href="{{ servicio.archivo.url }}" class="btn btn-outline-dark" type="button" download><i
+                            class="fa-regular fa-folder-open"></i> Archivo</a>
+                    {% else %}
+                    <div class="" data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="Este archivo no está disponible">
+                        <button class="btn btn-outline-dark" type="button" disabled>
+                            <i class="fa-regular fa-folder-open"></i> Archivo
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Creditos -->
+        <div class="border border-2 bg-white rounded-4 px-4 py-3 my-3 shadow-sm">
+            <p class="font-monospace">Base de datos proporcionada por
+                {% if servicio.desarrollador_enlace %}
+                <a href="{{ servicio.desarrollador_enlace }}" target="_blank" class="text-primary">
+                    {{ servicio.desarrollador }}</a>.
+                {% else %}
+                {{ servicio.desarrollador }}.
+                {% endif %}
+
+                <br>Esta herramienta trabaja bajo la licencia
+                {% if servicio.nombre_licencia_enlace %}
+                <a href="{{ servicio.nombre_licencia_enlace }}" target="_blank" class="text-primary">
+                    {{ servicio.nombre_licencia }}.</a>
+                {% else %}
+                {{ servicio.nombre_licencia }}.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Mostrar el resto de bases de datos -->
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-4 mb-4 shadow-sm">
+        <h5 class="mt-1 mb-4 text-center">Otras Bases de datos</h5>
+        {% if servicios_db.count == 0 %}
+        <p class="text-center">¡Esta es la única Base de Datos disponible!</p>
+        {% else %}
+        {% for db in servicios_db %}
+        <div class="list-group rounded-5 rounded-top py-2 text-center">
+            <a href="{% url 'servicios_detalle' db.nombre %}" class="list-group-item list-group-item-action shadow-sm">
+                {{ db.nombre }}<i class="fa-solid fa-database text-dark ms-1" data-bs-toggle="tooltip"
+                    data-bs-placement="right" data-bs-title="Base de Datos"></i>
+                <p><small class="text-body-secondary">{{ db.descrip }}</small></p>
+            </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+
+</div>
+
+<!-- Modal Base de datos -->
+<div class="modal fade" id="staticBackdropDB" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Eliminar servicio</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Este proceso es irreversible y no se podrá recuperar este servicio
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <form method="post"> {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"
+                        href="{% url 'servicios_detalle' servicio.nombre %}">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenido si es una herramienta -->
+{% elif servicio.categoria.nombre_categoria == "Herramienta" %}
+<div class="container mt-5">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'servicios' %}" class="custom-color">Servicios</a></li>
+            <li class="breadcrumb-item">
+                {% if servicio.categoria.nombre_categoria == "Base de Datos" %}
+                <a href="{% url 'database' %}" class="custom-color">Bases de Datos</a>
+                {% elif servicio.categoria.nombre_categoria == "Herramienta" %}
+                <a href="{% url 'servicios' %}" class="custom-color">Herramienta</a>
+                {% endif %}
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ servicio.nombre }}</li>
+        </ol>
+    </nav>
+
+    <!-- Seccion nombre y dropdown -->
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-2 mb-4 shadow-sm text-center">
+        <h5 class="fw-bold mt-4 mb-3 d-flex justify-content-center align-items-center">
+            {{ servicio.nombre }}
+            {% if servicio.categoria.nombre_categoria == "Herramienta" %}
+            <i class="fa-solid fa-gear ms-1"></i>
+            {% elif servicio.categoria.nombre_categoria == "Base de Datos" %}
+            <i class="fa-solid fa-database ms-1"></i>
+            {% endif %}
+            {% if user.is_superuser or user.is_staff %}
+            <div class="dropend ms-1" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-title="Gestionar herramienta">
+                <button class="btn btn-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'servicios_editar' servicio.nombre %}">Editar
+                            herramientas</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <!-- Boton lanzar modal -->
+                    <li>
+                        <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdropHerramienta">
+                            Eliminar herramienta
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </h5>
+
+        <!-- Seccion descripcion -->
+        <p class="fw-light mt-4">{{ servicio.descrip }}</p>
+
+        <!-- Seccion imagen -->
+        {% if servicio.imagen_servicio %}
+        <div class="d-flex justify-content-center">
+            <div class="text-center py-2">
+                <img src="{{ servicio.imagen_servicio.url }}" class="border border-1 rounded-4 shadow"
+                    style="height: 400px; width: 500px;" alt="">
+            </div>
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-center">
+            <div class="text-center py-2">
+                <img src="/profesionales/media/servicios-imagenes/default.png" class="rounded-4"
+                    style="height: 400px; width: 500px;" alt="">
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Seccion para video y archivo -->
+        <div class="d-flex justify-content-center border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+            <div class="d-flex gap-5 text-center">
+                <div class="">
+                    <p>Visualiza el tutorial aquí</p>
+                    {% if servicio.video_enlace %}
+                    <a href="{{ servicio.video_enlace }}" target="_blank" class="btn btn-outline-dark shadow-sm"
+                        type="button">
+                        <i class="fa-brands fa-youtube"></i> Tutorial
+                    </a>
+                    {% else %}
+                    <div class="" data-bs-toggle="tooltip" data-bs-placement="left"
+                        data-bs-title="Este tutorial no está disponible">
+                        <button class="btn btn-outline-dark" type="button" disabled>
+                            <i class="fa-brands fa-youtube"></i> Tutorial
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="">
+                    <p>Descarga el contenido aquí</p>
+                    {% if servicio.archivo %}
+                    <a href="{{ servicio.archivo.url }}" class="btn btn-outline-dark" type="button" download><i
+                            class="fa-regular fa-folder-open"></i> Archivo</a>
+                    {% else %}
+                    <div class="" data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="Este archivo no está disponible">
+                        <button class="btn btn-outline-dark" type="button" disabled>
+                            <i class="fa-regular fa-folder-open"></i> Archivo
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Creditos -->
+        <div class="border border-2 bg-white rounded-4 px-4 py-3 my-3 shadow-sm">
+            <p class="font-monospace">Herramienta desarrollada por
+                {% if servicio.desarrollador_enlace %}
+                <a href="{{ servicio.desarrollador_enlace }}" target="_blank" class="text-primary">
+                    {{ servicio.desarrollador }}</a>.
+                {% else %}
+                {{ servicio.desarrollador }}.
+                {% endif %}
+
+                <br>Esta herramienta trabaja bajo la licencia
+                {% if servicio.nombre_licencia_enlace %}
+                <a href="{{ servicio.nombre_licencia_enlace }}" target="_blank" class="text-primary">
+                    {{ servicio.nombre_licencia }}</a>.
+                {% else %}
+                {{ servicio.nombre_licencia }}.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Mostrar el resto de herramientas -->
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-4 mb-4 shadow-sm">
+        <h5 class="mt-1 mb-4 text-center">Otras herramientas</h5>
+        {% if servicios_herramienta.count == 0 %}
+        <p class="text-center">¡Esta es la única herramienta disponible!</p>
+        {% else %}
+        {% for sv in servicios_herramienta %}
+        <div class="list-group rounded-5 rounded-top py-2 text-center">
+            <a href="{% url 'servicios_detalle' sv.nombre %}"
+                class="list-group-item list-group-item-action shadow-sm">{{ sv.nombre }}<i
+                    class="fa-solid fa-gear text-dark ms-1" data-bs-toggle="tooltip" data-bs-placement="right"
+                    data-bs-title="Herramienta"></i>
+                <p><small class="text-body-secondary">{{ sv.descrip }}</small></p>
+            </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- Modal Herramienta -->
+<div class="modal fade" id="staticBackdropHerramienta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Eliminar servicio</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Este proceso es irreversible y no se podrá recuperar este servicio
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <form method="post"> {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"
+                        href="{% url 'servicios_detalle' servicio.nombre %}">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+
+{% endblock %}

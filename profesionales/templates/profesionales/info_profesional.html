@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+<body>
+    {% block content %}
+    <div class="container">
+        <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 text-center">Información de Profesionales</h4>
+        <div class="row">
+            {% for info in info_pro %}
+                <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 mb-4">
+                    <p>{{ info.nombre }}</p>
+                    <p>{{ info.apellido }}</p>
+                    <p>{{ info.titulo_universitario }}</p>
+                    <p>{{ info.universidad }}</p>
+                    <p>{{ info.email }}</p>
+                    <p>{{ info.telefono }}</p>
+                    <a href="{% url 'detalle_profesional' info.id %}">Ver detalles</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

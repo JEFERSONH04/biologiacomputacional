@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Activación de cuenta{% endblock %}
+
+{% block content %}
+
+<div class="container col-md-8 text-center py-5">
+    <img src="{% static 'images/logo-color.png' %}" class="mb-4" width="90" height="75">
+    <div class="container border border-2 shadow rounded-5 py-5">
+
+        <div class="container px-5">
+            <h2 class="mb-4">Activación de cuenta</h2>
+
+            <p>Lo sentimos, pero el enlace de activación es inválido. Esto puede ser debido a que el enlace ya ha sido
+                utilizado o ha expirado. Por favor, intenta registrarte de nuevo o contacta con el soporte si necesitas
+                ayuda.</p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

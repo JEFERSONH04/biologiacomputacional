@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hola {{ user.username }} 👋
+
+Gracias por registrarte en nuestro sitio web. Por favor, haz clic en el enlace de abajo para verificar tu cuenta:
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Si tienes alguna pregunta, no dudes en contactarnos.
+
+¡Gracias por usar nuestro sitio!
+
+El equipo de investigación del Laboratorio de Biología Computacional
+{% endautoescape %}

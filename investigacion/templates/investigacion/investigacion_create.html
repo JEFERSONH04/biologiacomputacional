@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Nueva investigación {% endblock %}
+
+{% block content %}
+
+<!-- Contenido -->
+<div class="container my-5">
+
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'investigacion' %}" class="custom-color">Investigación</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nueva investigación</li>
+        </ol>
+    </nav>
+
+    <div class="border border-2 rounded-4 py-4 px-4 bg-light">
+
+        <h4 class="text-center"> Nueva investigación</h4>
+        <form class="row g-3 needs-validation border border-2 rounded-4 py-3 px-4 mt-3 bg-white" method="post"
+            enctype="multipart/form-data" novalidate> {% csrf_token %}
+
+            {% if form_errors %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> Por favor, corrija los siguientes errores:
+                <ul>
+                    {% for field, errors in form_errors.items %}
+                    {% for error in errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="row justify-content-center py-3">
+
+                <!-- Entrada nombre y categoria -->
+                <div class="col-4">
+                    <label for="validationCustom01" class="form-label">Nombre de la investigación</label>
+                    <input type="text" class="form-control" id="validationCustom01" name="nombre" required>
+                    <div class="invalid-feedback">
+                        Campo requerido.
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="mt-4 mb-3">
+                        <select class="form-select" aria-label="Default select example" name="categoria" required>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            {% for categoria in categorias %}
+                            {% if investigacion.categoria_id == categoria.id %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}" selected>
+                                {{ categoria.nombre_categoria }}
+                            </option>
+                            {% else %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}">
+                                {{ categoria.nombre_categoria }}
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                            Selección requerida.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada descripcion -->
+                <div class="col-10">
+                    <label for="validationTextarea" class="form-label">Descripción</label>
+                    <textarea class="form-control" name="descrip" id="validationTextarea" placeholder=""
+                        style="height: 300px;" required></textarea>
+                    <div class="invalid-feedback">
+                        Descripción requerida.
+                    </div>
+                </div>
+
+                <!-- Entrada imagen -->
+                <div class="col-10 mt-3 text-center py-3 d-flex flex-column justify-content-center align-items-center">
+                    <h5>Imagen</h5>
+
+                    <img src="/profesionales/media/servicios-imagenes/default.png" alt=""
+                        class="mt-2 border border-1 rounded-4" style="height: 350px;">
+
+                    <div class="mb-2 mt-4 col-6">
+                        <label for="formFileInvestigacion" class="form-label">Insertar nueva imagen</label>
+                        <input class="form-control" type="file" name="imagen_investigacion" id="formFileInvestigacion"
+                            accept="image/*" required>
+                        <div class="invalid-feedback">
+                            Imagen requerida.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada imagen Tif, pdf y mejores pdf -->
+                <div class="row my-3 gap-5 justify-content-center">
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>Imagen TIF</h5>
+
+                        <img src="/profesionales/media/servicios-imagenes/default.png" alt=""
+                            class="mt-2 border border-1 rounded-4" style="height: 150px;">
+
+                        <div class="mb-2 mt-4">
+                            <label for="formFileTif" class="form-label">Insertar nueva imagen</label>
+                            <input class="form-control" type="file" name="imagen_tif" id="formFileTif" accept="image/*">
+                        </div>
+                    </div>
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>PDF</h5>
+
+                        <div class="container my-3">
+                            <i class="fa-solid fa-folder fs-1 mb-2"></i>
+                            <p>Agregar un PDF</p>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="formFilePdf" class="form-label">Insertar un nuevo PDF</label>
+                            <input class="form-control" type="file" name="pdf" id="formFilePdf"
+                                accept="application/pdf">
+                        </div>
+                    </div>
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>Mejores PDF</h5>
+
+                        <div class="container my-3">
+                            <i class="fa-solid fa-folder fs-1 mb-2"></i>
+                            <p>Agregar Mejores PDF</p>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="formFileMejoresPdf" class="form-label">Insertar un nuevo Mejores PDF</label>
+                            <input class="form-control" type="file" name="mejores_pdf" id="formFileMejoresPdf"
+                                accept="application/pdf">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada imagenes extras -->
+                <div class="row my-3 gap-5 justify-content-center">
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>Imagen extra 1</h5>
+
+                        <img src="/profesionales/media/servicios-imagenes/default.png" alt=""
+                            class="mt-2 border border-1 rounded-4" style="height: 150px;">
+
+                        <div class="mb-2 mt-4">
+                            <label for="formFileExtra1" class="form-label">Insertar nueva imagen</label>
+                            <input class="form-control" type="file" name="imagen_extra_1" id="formFileExtra1"
+                                accept="image/*">
+                        </div>
+                    </div>
+
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>Imagen extra 2</h5>
+
+                        <img src="/profesionales/media/servicios-imagenes/default.png" alt=""
+                            class="mt-2 border border-1 rounded-4" style="height: 150px;">
+
+                        <div class="mb-2 mt-4">
+                            <label for="formFileExtra2" class="form-label">Insertar nueva imagen</label>
+                            <input class="form-control" type="file" name="imagen_extra_2" id="formFileExtra2"
+                                accept="image/*">
+                        </div>
+                    </div>
+
+                    <div
+                        class="col-3 text-center mt-3 border border-1 rounded-4 bg-light py-4 d-flex justify-content-center align-items-center flex-column">
+                        <h5>Imagen extra 3</h5>
+
+                        <img src="/profesionales/media/servicios-imagenes/default.png" alt=""
+                            class="mt-2 border border-1 rounded-4" style="height: 150px;">
+
+                        <div class="mb-2 mt-4">
+                            <label for="formFileExtra3" class="form-label">Insertar nueva imagen</label>
+                            <input class="form-control" type="file" name="imagen_extra_3" id="formFileExtra3"
+                                accept="image/*">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 text-center mb-3">
+                <button class="btn btn-success" type="submit">Crear investigación</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Selecciona todos los formularios que queremos validar
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Recorre cada formulario y previene el envío si hay campos inválidos
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+</script>
+
+{% endblock %}

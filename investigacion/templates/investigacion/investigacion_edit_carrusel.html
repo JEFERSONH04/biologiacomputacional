@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Editar carrusel {{ investigacion.nombre }} {% endblock %}
+
+{% block content %}
+
+<!-- Contenido -->
+<div class="container my-5">
+
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'investigacion' %}" class="custom-color">Investigación</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Editar carrusel</li>
+        </ol>
+    </nav>
+
+    <div class="border border-2 rounded-4 py-4 px-4 bg-light">
+
+        <h4 class="text-center"> Editar carrusel</h4>
+        <form
+            class="row g-3 needs-validation border border-2 rounded-4 py-3 px-4 mt-3 bg-white d-flex justify-content-center"
+            method="post" enctype="multipart/form-data" novalidate> {% csrf_token %}
+
+            {% if form_errors %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> Por favor, corrija los siguientes errores:
+                <ul>
+                    {% for field, errors in form_errors.items %}
+                    {% for error in errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Entrada de titulo -->
+            <div class="col-md-12 py-3 px-3 border border-2 rounded-4 bg-light">
+                <label for="entradaTitulo" class="form-label">Título</label>
+                <input type="text" class="form-control" id="entradaTitulo" name="titulo" value="{{ carrusel.titulo }}">
+                <div class="invalid-feedback">
+                    Campo requerido
+                </div>
+            </div>
+
+            <!-- Entrada para texto e imagen 1 -->
+            <div class="col-md-12 row justify-content-center py-4 px-3 mt-5 border border-2 rounded-4 bg-light">
+                <h5 class="col-md-12 text-center mb-4">Sección 1</h5>
+
+                <div class="col-md-6 text-center row justify-content-center">
+                    <img src="{{ carrusel.imagen1.url }}" alt="" class="border border-2 rounded-4 py-1 px-1 mb-4"
+                        style="max-width: 50%; height: auto;">
+                    <label for="entradaImagen1" class="form-label">Insertar nueva imagen</label>
+                    <input class="form-control" type="file" name="imagen1" id="entradaImagen1" accept="image/*">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="entradaTexto1" class="form-label">Texto</label>
+                    <input type="text" class="form-control" id="entradaTexto1" name="texto1"
+                        value="{{ carrusel.texto1 }}" required>
+                    <div class="invalid-feedback">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entrada para texto e imagen 2 -->
+            <div class="col-md-12 row justify-content-center py-4 px-3 mt-5 border border-2 rounded-4 bg-light">
+                <h5 class="col-md-12 text-center mb-4">Sección 2</h5>
+
+                <div class="col-md-6 text-center row justify-content-center">
+                    <img src="{{ carrusel.imagen2.url }}" alt="" class="border border-2 rounded-4 py-1 px-1 mb-4"
+                        style="max-width: 50%; height: auto;">
+                    <label for="entradaImagen2" class="form-label">Insertar nueva imagen</label>
+                    <input class="form-control" type="file" name="imagen2" id="entradaImagen2" accept="image/*">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="entradaTexto2" class="form-label">Texto</label>
+                    <input type="text" class="form-control" id="entradaTexto2" name="texto2"
+                        value="{{ carrusel.texto2 }}" required>
+                    <div class="invalid-feedback">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entrada para texto e imagen 3 -->
+            <div class="col-md-12 row justify-content-center py-4 px-3 mt-5 border border-2 rounded-4 bg-light">
+                <h5 class="col-md-12 text-center mb-4">Sección 3</h5>
+
+                <div class="col-md-6 text-center row justify-content-center">
+                    <img src="{{ carrusel.imagen3.url }}" alt="" class="border border-2 rounded-4 py-1 px-1 mb-4"
+                        style="max-width: 50%; height: auto;">
+                    <label for="entradaImagen3" class="form-label">Insertar nueva imagen</label>
+                    <input class="form-control" type="file" name="imagen3" id="entradaImagen3" accept="image/*">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="entradaTexto3" class="form-label">Texto</label>
+                    <input type="text" class="form-control" id="entradaTexto3" name="texto3"
+                        value="{{ carrusel.texto3 }}" required>
+                    <div class="invalid-feedback">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 text-center mb-2 mt-4">
+                <button class="btn btn-success" type="submit">Editar información</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Selecciona todos los formularios que queremos validar
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Recorre cada formulario y previene el envío si hay campos inválidos
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+</script>
+
+{% endblock %}

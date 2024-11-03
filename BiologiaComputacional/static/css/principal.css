@@ -1,0 +1,107 @@
+body {
+  font-family: "Ubuntu", sans-serif;
+  background: #000000f5;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+a:hover {
+  color: #0d6efd;
+}
+
+.navbar-custom {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  font-weight: 400;
+  font-size: 16px;
+  color: #303030;
+}
+
+.light-text {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300; /* Light */
+  font-size: 16px;
+}
+
+.regular-text {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400; /* Regular */
+}
+
+.medium-text {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500; /* Medium */
+}
+
+/* Quitar efecto shadow navbar */
+
+.navbar-custom {
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar-no-shadow {
+  box-shadow: none !important;
+}
+
+/* Botones iniciar sesion y registro */
+
+.btn.btn-white.rounded-pill {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.btn-white.rounded-pill .button-text {
+  margin-right: 0px;
+  transition: margin-right 0.3s ease;
+}
+
+.btn.btn-white.rounded-pill:hover .button-text {
+  margin-right: 25px;
+}
+
+.btn.btn-white.rounded-pill i {
+  position: absolute;
+  right: -20px;
+  top: 55%;
+  transform: translateY(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.btn.btn-white.rounded-pill:hover i {
+  right: 10%;
+  top: 55%;
+  opacity: 1;
+}
+
+.btn.btn-warning.rounded-pill.shadow-sm {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.btn-warning.rounded-pill.shadow-sm .button-text {
+  margin-right: 0px;
+  transition: margin-right 0.3s ease;
+}
+
+.btn.btn-warning.rounded-pill.shadow-sm:hover .button-text {
+  margin-right: 25px;
+}
+
+.btn.btn-warning.rounded-pill.shadow-sm i {
+  position: absolute;
+  right: -20px;
+  top: 55%;
+  transform: translateY(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.btn.btn-warning.rounded-pill.shadow-sm:hover i {
+  right: 10%;
+  top: 55%;
+  opacity: 1;
+}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Activación de cuenta{% endblock %}
+
+{% block content %}
+
+<div class="container col-md-8 text-center py-5">
+    <img src="{% static 'images/logo-color.png' %}" class="mb-4" width="90" height="75">
+    <div class="container border border-2 shadow rounded-5 py-5">
+
+        <div class="container px-5">
+            <h2 class="mb-4">Activación de cuenta</h2>
+
+            <p>¡Felicidades! Tu cuenta ha sido activada con éxito. Ahora puedes empezar a utilizar nuestro sitio.</p>
+            <p>No olvides actualizar tu informacion <a href="{% url 'perfil' %}" class="custom-color">aquí.</a></p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

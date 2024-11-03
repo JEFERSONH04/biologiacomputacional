@@ -1,0 +1,158 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Satisfy&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=DM+Serif+Text:ital@0;1&family=Satisfy&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=DM+Serif+Text:ital@0;1&family=Satisfy&display=swap");
+
+h5 {
+  font-family: "Satisfy", cursive;
+  font-size: 40px;
+  color: #00c6c7;
+}
+
+h4 {
+  font-family: "Satisfy", cursive;
+  font-size: 40px;
+  color: #009092;
+}
+
+body {
+  background-color: rgb(218, 246, 255);
+  color: #006467;
+}
+
+.navbar-custom {
+  width: 60%;
+  border-radius: 40px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.577);
+  backdrop-filter: blur(10px);
+  position: fixed;
+
+  display: none;
+}
+
+.visible {
+  display: block;
+  transition: top 1s;
+}
+
+.nav-custom {
+  display: flex;
+  position: absolute;
+  top: 0;
+  flex-direction: row;
+}
+
+.nav-item-buttons {
+  width: 300px;
+}
+
+.nav-custom li {
+  padding-left: 20px;
+}
+
+.cardbox {
+  background-color: rgb(255, 255, 255);
+  border-radius: 44px;
+  width: 400px;
+  margin: 20px;
+}
+
+.custom-boton {
+  color: rgb(255, 255, 255);
+  background-color: #75dedf;
+  border-radius: 44px;
+  padding-top: 16px;
+  height: 60px;
+  width: 200px;
+}
+
+.cardbox a {
+  font-family: "Satisfy", cursive;
+  font-size: 10px;
+  color: #00c6c7;
+}
+
+.longcardbox {
+  background-color: #ffffff;
+  border-radius: 44px;
+}
+
+.nosotros {
+  width: 50%;
+  padding: 20px;
+}
+
+.barrita,
+.barritapro {
+  position: absolute;
+  top: 15px;
+  right: 120px;
+  margin-top: 1em;
+  padding: 10px;
+  border-radius: 40px;
+}
+
+.barritapro {
+  background-color: white;
+  color: black;
+  right: 20%;
+}
+
+.barrita li,
+.barritapro li {
+  padding-left: 20px;
+}
+
+.boton-inicio {
+  position: absolute;
+  border-radius: 0 0 20px 0;
+  top: 0px;
+  left: 0px;
+  width: 36%;
+  margin-top: 30px;
+  margin-left: 4em;
+}
+
+.inicio {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("/static/images/fondo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 0px 0px 44px 44px;
+  width: 100%;
+  height: 500px;
+  color: white;
+  padding-right: 2em;
+}
+
+.registro-correo,
+.registro-google {
+  color: #ffffff;
+}
+
+.registro-correo:hover,
+.registro-google:hover {
+  color: #00ffff;
+}
+
+.tarjetaprofesional {
+  background-color: white;
+  height: 300px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 40px;
+}
+
+.footer-custom,
+.footer-custom a,
+.footer-custom h5 {
+  font-family: "DM Serif Text", serif;
+  color: #ffffff;
+  background-color: #009092;
+  border-radius: 44px 44px 0px 0px;
+}

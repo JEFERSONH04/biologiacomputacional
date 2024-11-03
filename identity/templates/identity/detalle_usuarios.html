@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Informacion del usuario {{ user.username }} {% endblock %}
+
+{% block content %}
+
+<div class="container my-3">
+
+    <div class="mb-5 mt-5">
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
+                <div class="card-body text-center">
+                    <div class="mt-2">
+                        <img src="{{ user.profileadditionalinfo.image.url }}"
+                            class="rounded-circle border border-2 border-secondary shadow img-fluid"
+                            style="width: 100px;">
+                    </div>
+                    <p class="text-muted">@{{ user.username }}</p>
+                    {% if user.is_superuser %}
+                    <span class="badge rounded-1 text-bg-success mb-4">Super usuario</span>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <span class="badge rounded-1 text-bg-primary mb-4">Administrador</span>
+                    {% endif %}
+                    <h4 class="mb-2 text-capitalize">{{ user.first_name }} {{ user.last_name }} </h4>
+                    <p class="text-muted mb-2"> {{ user.email }} </p>
+                    <p class="text-muted"> {{ user.profileadditionalinfo.phone_number }} </p>
+
+                    <!-- Pills navs -->
+                    <ul class="nav nav-justified mt-4 mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link rounded text-bg-danger" href="{% url 'logout' %}"><i
+                                    class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
+                        </li>
+                    </ul>
+                    <!-- Pills navs -->
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-8">
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'perfil' %}"><i
+                            class="fa-solid fa-circle-info text-secondary me-1"></i>
+                        Información personal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'cambio_contrasena' %}"><i
+                            class="fa-solid fa-key text-secondary me-1"></i>
+                        Cambiar contraseña</a>
+                </li>
+                {% if user.is_superuser or user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link active bg-light text-black disabled" aria-disabled="true"
+                        href="{% url 'gestion_usuarios' %}"><i class="fa-solid fa-user-gear text-secondary me-1"></i>
+                        Gestionar usuarios</a>
+                </li>
+                {% endif %}
+            </ul>
+            <!-- Fin Tabs -->
+
+            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
+                <div class="card-body row text-center">
+                    <div class="row d-flex align-items-center mb-3">
+                        <div class="col-md-2">
+                            <a href="{% url 'gestion_usuarios' %}" class="custom-color"><i
+                                    class="fa-solid fa-arrow-left"></i></a>
+                        </div>
+                        <h5 class="mb-2 mt-2 col-md-8">Información del usuario</h5>
+                        <div class="col-md-2">
+                            {% if not user.is_superuser or not usuarios.is_superuser %}
+                            {% if user.is_superuser or user.is_staff %}
+                            {% if not usuarios.is_superuser %}
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-white dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Gestionar
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% if usuarios.is_active %}
+                                    <li><a class="dropdown-item" href="" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropDesactivarUser">Desactivar usuario</a>
+                                    </li>
+                                    {% else %}
+                                    <li><a class="dropdown-item" href="" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropActivarUser">Activar usuario</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                    {% if usuarios.is_staff %}
+                                    <li><a class="dropdown-item" href="" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropDescenderAdmin">Descender a
+                                            Estudiante</a></li>
+                                    {% else %}
+                                    <li><a class="dropdown-item" href="" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropAscenderAdmin">Ascender a
+                                            Administrador</a></li>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                    <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropEliminarUser">Eliminar usuario</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-2 col-md-7">
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticUsername" class="col-sm-4 text-center col-form-label">Usuario:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticUsername"
+                                    value="{{ usuarios.username }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticName" class="col-sm-4 text-center col-form-label">Nombres:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticName"
+                                    value="{{ usuarios.first_name }} {{ usuarios.last_name }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticPhone" class="col-sm-4 text-center col-form-label">Teléfono:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticPhone"
+                                    value="{{ usuarios_adicional_info.phone_number }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticEmail" class="col-sm-4 text-center col-form-label">Correo:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ usuarios.email }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticUsername" class="col-sm-4 text-center col-form-label">Permisos:</label>
+                            <div class="col-sm-8 d-flex align-items-center">
+                                {% if usuarios.is_superuser %}
+                                <span class="badge rounded-1 text-bg-success me-2">Super usuario</span>
+                                {% endif %}
+                                {% if usuarios.is_staff %}
+                                <span class="badge rounded-1 text-bg-primary me-2">Administrador</span>
+                                {% endif %}
+                                {% if not usuarios.is_superuser and not usuarios.is_staff %}
+                                <span class="badge rounded-1 text-bg-secondary me-2">Estudiante</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticDate_joined" class="col-sm-4 text-center col-form-label">Creación de la
+                                cuenta:</label>
+                            <div class="col-sm-8 d-flex align-items-center">
+                                <input type="text" readonly class="form-control-plaintext" id="staticDate_joined"
+                                    value="{{ usuarios.date_joined }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticLast_login" class="col-sm-4 text-center col-form-label">Último inicio de
+                                sesión:</label>
+                            <div class="col-sm-8 d-flex align-items-center">
+                                <input type="text" readonly class="form-control-plaintext" id="staticLast_login"
+                                    value="{{ usuarios.last_login }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-2 px-4 row col-md-12">
+                            <label for="staticStatus" class="col-sm-4 text-center col-form-label">Usuario
+                                activo:</label>
+                            <div class="col-sm-8 d-flex align-items-center">
+                                {% if usuarios.is_active %}
+                                <div class="text-success">
+                                    <i class="fa-solid fa-square-check fs-4"></i>
+                                </div>
+                                {% else %}
+                                <div class="text-danger">
+                                    <i class="fa-solid fa-rectangle-xmark fs-4"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-5">
+                        <img src="{{ usuarios_adicional_info.image.url }}"
+                            class="rounded-circle border border-2 border-secondary shadow img-fluid mb-2 mt-4"
+                            style="width: 100px;">
+                        <p class="text-center">Imagen de perfil</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mb-5 mt-5">
+
+    </div>
+
+</div>
+
+<!-- Modal ascender administrador -->
+<div class="modal fade" id="staticBackdropAscenderAdmin" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Ascender Administrador</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está a punto de ascender el usuario {{ usuarios.username }} a Administrador
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'ascender_administrador' pk=usuarios.pk %}" type="button"
+                    class="btn btn-primary">Ascender</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal descender administrador -->
+<div class="modal fade" id="staticBackdropDescenderAdmin" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Descender Administrador</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está a punto de descender el usuario {{ usuarios.username }} a Estudiante
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'descender_administrador' pk=usuarios.pk %}" type="button"
+                    class="btn btn-primary">Descender</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal desactivar usuario -->
+<div class="modal fade" id="staticBackdropDesactivarUser" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Desactivar usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está a punto de desactivar el usuario {{ usuarios.username }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'desactivar_usuario' pk=usuarios.pk %}" type="button"
+                    class="btn btn-danger">Desactivar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal activar usuario -->
+<div class="modal fade" id="staticBackdropActivarUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Activar usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está a punto de activar el usuario {{ usuarios.username }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'activar_usuario' pk=usuarios.pk %}" type="button" class="btn btn-success">Activar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal eliminar usuario -->
+<div class="modal fade" id="staticBackdropEliminarUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Eliminar usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está a punto de eliminar el usuario {{ usuarios.username }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'eliminar_usuario' pk=usuarios.pk %}" type="button"
+                    class="btn btn-secondary">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+<!-- Fin Sistema de notificaciones Toast -->
+
+{% endblock %}

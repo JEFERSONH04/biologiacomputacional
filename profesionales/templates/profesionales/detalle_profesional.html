@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Profesional {{ profesional.nombre }} {% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-5 text-center"><a class="custom-color"
+            href="{% url 'buscarProfesional' %}"><i class="fa-solid fa-arrow-left"></i></a> Detalles del
+        Profesional </h4>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+
+            <div class="mx-auto" style="width: 16rem;">
+
+                <!-- Seccion infromacion adicional -->
+                <section class="perfil-container pb-3">
+
+                    <div class="card border-0" style="width: 18rem;">
+                        <div class="card-body d-flex flex-column align-items-center text-center">
+                            <img src="{{ profesional.foto.url }}" alt="Imagen de perfil"
+                                class="border border-3 img-fluid rounded-5 shadow">
+
+                            <h4 class="card-title mt-4">Campos de interés
+                                <hr class="mt-3 border border-dark text-primary border-2 shadow opacity-75 mx-auto"
+                                    style="width: 90px;">
+                            </h4>
+
+                            {% if not profesional.campo0 %}
+                            <p>Profesional sin campos de interés</p>
+                            {% endif %}
+
+                            {% if profesional.campo0 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo0 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo1 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo1 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo2 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo2 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo3 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo3 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo4 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo4 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo5 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo5 }}
+                            </span>
+                            {% endif %}
+                            {% if profesional.campo6 %}
+                            <span
+                                class="badge fw-semibold rounded-pill px-2 py-2 text-bg-primary bg-opacity-75 border border-2 shadow-sm">
+                                {{ profesional.campo6 }}
+                            </span>
+                            {% endif %}
+
+                            <div class="py-4">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <i class="fa-solid fa-school-flag fs-5"></i>
+                                    <strong class="mb-0">Facultad</strong>
+                                    <p class="fw-light">{{ profesional.facultad }}</p>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <i class="fa-solid fa-atom fs-5"></i>
+                                    <strong class="mb-0">Grupo de investigación</strong>
+                                    <p class="fw-light">{{ profesional.grupo_investigacion }}</p>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <i class="fa-solid fa-map-location-dot fs-5"></i>
+                                    <strong class="mb-0">Campus</strong>
+                                    <p class="fw-light">Universidad de Santander - Sede {{ profesional.campus }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <!-- Seccion infromacion adicional -->
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-4 mb-4">
+
+            <!-- Seccion informacion del profesional-->
+            <div class="d-flex justify-content-between">
+                <p class="text-uppercase fs-4 medium-text">{{ profesional.nombre }} {{ profesional.apellido }}
+                    {% if profesional.enlace_a_scholar %}
+                    <a href="{{ profesional.enlace_a_scholar }}" data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="Perfil del profesional en Google Scholar" target="_blank" class="custom-color"><i
+                            class="fa-brands fa-google-scholar"></i></a>
+                    {% else %}
+                    <a data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="Profesional sin enlace a Google Scholar" target="_blank" class="custom-color"><i
+                            class="fa-brands fa-google-scholar text-secondary"></i></a>
+                    {% endif %}
+                </p>
+
+                {% if user.is_superuser %}
+                <div class="dropdown-center">
+                    <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Gestionar
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'editar' profesional.id %}">Editar</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'eliminar' profesional.id %}">Eliminar</a>
+                        </li>
+                    </ul>
+                </div>
+
+                {% elif user.is_staff %}
+                <div class="dropdown-center">
+                    <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Gestionar
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'editar' profesional.id %}">Editar</a>
+                        </li>
+                    </ul>
+                </div>
+
+                {% endif %}
+            </div>
+
+            <p class="fs-6"><i class="fa-solid fa-graduation-cap me-2 light-text custom-size">
+                </i>{{ profesional.titulo_universitario }} - {{ profesional.universidad }}</p>
+            <p class="fs-6"><i class="fa-solid fa-envelope me-2 light-text custom-size"></i>{{ profesional.email }}
+            </p>
+            <p class="fs-6"><i class="fa-solid fa-phone me-2 light-text custom-size"></i>{{ profesional.telefono }}
+            </p>
+
+            <!-- Seccion informacion del profesional-->
+
+            <!-- Seccion articulos -->
+            <div class="row">
+
+                <h5 class="mb-3 mt-2 text-center">Artículos</h5>
+
+                {{ formset.management_form }}
+                {% if articulos %}
+                {% for articulo in articulos %}
+                <div class="card border rounded-2 shadow-sm py-3 px-4 mb-3 article-card">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <p>
+                            <span class="fw-semibold">Título: </span>{{ articulo.titulo }}
+                        </p>
+                    </div>
+
+                    <!-- Truncate linea -->
+                    <div class="truncate-text mb-3" style="max-height: 4.8em; overflow: hidden;">
+                        <p><span class="fw-semibold">Descripción: </span>{{ articulo.descripcion }}</p>
+                        <p>Año {{ articulo.anio }}</p>
+                        <div class="container text-center">
+                            <a type="button" href="{{ articulo.enlace_articulo }}" target="_blank"
+                                class="btn btn-outline-light custom-color text-center">Visitar
+                                artículo completo</a>
+                        </div>
+                    </div>
+                    {% if articulo.descripcion|length > 150 %}
+                    <a type="button" class="btn btn-outline-light custom-color show-more text-center">Mostrar más</a>
+                    <a type="button" class="btn btn-outline-light custom-color show-less text-center"
+                        style="display: none;">Mostrar menos</a>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-sm-12">
+                    <p class="text-center">Profesional sin artículos</p>
+                </div>
+                {% endif %}
+
+                {% if articulos|length > 3 %}
+                <button class="btn btn-outline-light custom-color" id="show-all">Mostrar todos los artículos</button>
+                <button class="btn btn-outline-light custom-color" style="display: none;" id="hide-articles">Ocultar
+                    artículos</button>
+                {% endif %}
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            </div>
+            <!-- Fin Seccion articulos -->
+
+        </div>
+    </div>
+
+    <!-- Navegacion de profesionales -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <!-- Si no hay un profesional anterior, deshabilita el botón -->
+            <li class="page-item {% if not prev_profesional %}disabled{% endif %}">
+                <!-- Si hay un profesional anterior, crea un enlace a su página de detalles -->
+                {% if prev_profesional %}
+                <a class="page-link custom-color"
+                    href="{% url 'detalle_profesional' prev_profesional.id %}">Anterior</a>
+                <!-- Si no hay un profesional anterior, muestra un botón deshabilitado -->
+                {% else %}
+                <a class="page-link custom-color">Anterior</a>
+                {% endif %}
+            </li>
+
+            <!-- Si no hay un profesional siguiente, deshabilita el botón -->
+            <li class="page-item {% if not next_profesional %}disabled{% endif %}">
+                <!-- Si hay un profesional siguiente, crea un enlace a su página de detalles -->
+                {% if next_profesional %}
+                <a class="page-link custom-color"
+                    href="{% url 'detalle_profesional' next_profesional.id %}">Siguiente</a>
+                <!-- Si no hay un profesional siguiente, muestra un botón deshabilitado -->
+                {% else %}
+                <a class="page-link custom-color">Siguiente</a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    <!-- Fin Navegacion de profesionales -->
+
+</div>
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+<!-- Fin Sistema de notificaciones Toast -->
+
+<!-- Importe de script personalizado -->
+<script src="{% static 'js/detalle_profesional.js' %}"></script>
+{% endblock %}

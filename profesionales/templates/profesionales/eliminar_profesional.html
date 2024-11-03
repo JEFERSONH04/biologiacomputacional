@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Profesional {{ profesional.nombre }} {% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+
+    <h4>Eliminar profesional</h4>
+    <form id="eliminarProfesionalForm" method="POST" action="{% url 'eliminar' profesional.id %}"> {% csrf_token %}
+        <div class="card w-50 mx-auto mt-5 my-5 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Proceso irreversible</h5>
+                <p>¿ Seguro que quiere eliminar al profesional {{ profesional.nombre }} ?</p>
+
+                <div class="float-end">
+                    <a href="{% url 'detalle_profesional' profesional.id %}" class="btn btn-danger mt-auto">Cancelar</a>
+                    <button type="submit" class="btn btn-secondary mt-auto">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

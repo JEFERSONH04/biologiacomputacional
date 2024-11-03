@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Editar profesional {{ profesional.nombre }} {% endblock %}
+
+{% block content %}
+
+<!-- Seccion para editar profesionales -->
+<div class="container">
+    <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
+        <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-5 text-center"><a class="custom-color"
+                href="javascript:window.history.back()"><i class="fa-solid fa-arrow-left"></i></a> Editar Profesional
+        </h4>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 mb-4 text-center">
+                <img src="{{ profesional.foto.url }}"
+                    class="border border-3 img-fluid rounded-5 shadow align-items-center" alt="" width="250"
+                    height="100">
+
+                <!-- File input agregar imagen -->
+                <h5 class="text-start mb-3 text-center mt-4"><i class="fa-solid fa-images me-1"></i> Imagen</h5>
+
+                <div class="input-group has-validation mt-3 text-center">
+                    <input type="file" class="form-control{% if form.foto.errors %} is-invalid{% endif %}" name="foto"
+                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                    {% for error in form.foto.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {{ profesionales.foto.errors }}
+                </div>
+
+                <h5 class="text-start mt-5 mb-3 text-center"><i class="fa-solid fa-table-list me-1"></i> Campos de
+                    interés</h5>
+
+                {% for campo, valor in campos.items %}
+                <!-- Entrada de {{ campo }} -->
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="{{ campo }}" id="validationCustom{{ campo }}"
+                        value="{{ valor }}" aria-describedby="inputGroupPrepend" placeholder="">
+                    <label for="validationCustom{{ campo }}" class="form-label">
+                        Campo de interés {{ forloop.counter }}</label>
+                </div>
+                {% endfor %}
+
+                <p class="fw-light text-start">Máximo 7 campos de interés</p>
+
+                <h5 class="text-center mt-5 mb-3"><i class="fa-solid fa-sitemap me"></i> Información adicional</h5>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="facultad" id="validationCustomFacultad"
+                        value="{{ profesional.facultad }}" aria-describedby="inputGroupPrepend" placeholder="">
+                    <label for="validationCustomFacultad" class="form-label">Facultad</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="grupo_investigacion"
+                        id="validationCustomGrupoInvestigacion" value="{{ profesional.grupo_investigacion }}"
+                        aria-describedby="inputGroupPrepend" placeholder="">
+                    <label for="validationCustomGrupoInvestigacion" class="form-label">Grupo de investigación</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="campus" id="validationCustomCampus"
+                        value="{{ profesional.campus }}" aria-describedby="inputGroupPrepend" placeholder="">
+                    <label for="validationCustomCampus" class="form-label">Campus</label>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-4 mb-4 text-center">
+
+                <h5 class="text-start mb-3"><i class="fa-solid fa-circle-info me-1"></i> Información personal</h5>
+
+                <!-- Entrada de nombre y apellido -->
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="nombre" id="validationCustomName"
+                                aria-describedby="inputGroupPrepend" value="{{ profesional.nombre }}" placeholder=""
+                                required>
+                            <label for="validationCustomName" class="form-label">Nombres</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="apellido" id="validationCustomLast_name"
+                                aria-describedby="inputGroupPrepend" value="{{ profesional.apellido }}" placeholder=""
+                                required>
+                            <label for="validationCustomLast_name" class="form-label">Apellidos</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada de Titulo y Universidad -->
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="titulo_universitario"
+                                id="validationCustomDegree" value="{{ profesional.titulo_universitario }}"
+                                aria-describedby="inputGroupPrepend" placeholder="" required>
+                            <label for="validationCustomDegree" class="form-label">Título universitario</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="universidad" id="validationCustomUniversity"
+                                aria-describedby="inputGroupPrepend" value="{{ profesional.universidad }}"
+                                placeholder="" required>
+                            <label for="validationCustomUniversity" class="form-label">Universidad</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada de Correo -->
+                <div class="form-floating has-validation mb-2">
+                    <input type="email" class="form-control" name="email" id="validationCustomEmail"
+                        aria-describedby="inputGroupPrepend" value="{{ profesional.email }}" placeholder="" required>
+                    <label for="validationCustomEmail" class="form-label">Correo electrónico</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <!-- Entrada de Telefono -->
+                <div class="form-floating has-validation mb-3">
+                    <input type="text" class="form-control{% if form.telefono.errors %} is-invalid{% endif %}"
+                        name="telefono" id="validationCustomPhone" value="{{ profesional.telefono }}"
+                        aria-describedby="inputGroupPrepend" placeholder="" required>
+                    <label for="validationCustomPhone" class="form-label">Teléfono</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                    {% for error in form.telefono.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {{ profesionales.telefono.errors }}
+                </div>
+
+                <!-- Entrada de enlace a google scholar -->
+                <div class="form-floating has-validation mb-2">
+                    <input type="text" class="form-control" name="enlace_a_scholar" id="validationCustomEnlace"
+                        aria-describedby="inputGroupPrepend" value="{{ profesional.enlace_a_scholar }}" placeholder=""
+                        required>
+                    <label for="validationCustomEnlace" class="form-label">Enlace al perfil en Google Scholar
+                        (Estructura: https://misitio.com)</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <!-- Articulos -->
+
+                <h5 class="text-center mt-5 mb-3"><i class="fa-solid fa-newspaper me-1"></i> Artículos</h5>
+
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="article-form mb-4 border rounded-3 bg-light shadow-sm py-3 px-3">
+                    <p class="text-center fw-light">Artículo número {{ forloop.counter }}</p>
+                    <hr class="mx-auto w-50">
+                    {{ form.as_p }}
+                    {% if forloop.counter != formset|length %}
+                    <input type="hidden" name="action" value="eliminar_articulo">
+                    <div class="text-end border border-2 rounded-3 bg-white mb-5 py-2 px-2">
+                        <input type="checkbox" name="eliminar_articulo" value="{{ form.instance.id }}" class="btn-check"
+                            id="btn-articulo-{{ forloop.counter }}" autocomplete="off">
+                        <label class="btn btn-outline-danger" for="btn-articulo-{{ forloop.counter }}">
+                            <i class="fa-regular fa-trash-can"></i> Eliminar este artículo
+                        </label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <!-- Fin Articulos -->
+
+                <button type="submit" class="btn btn-success ">Editar información</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<!-- Fin Seccion para editar profesionales -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const eliminarBotones = document.querySelectorAll(".eliminar-articulo-btn");
+
+        eliminarBotones.forEach(function (boton) {
+            boton.addEventListener("click", function () {
+                const articuloId = boton.getAttribute("data-articulo-id");
+
+                fetch(`/eliminar_articulo/${articuloId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        action: "eliminar_articulo",
+                        articulo_id: articuloId
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Elimina el artículo de la página
+                            boton.closest('.article-form').remove();
+                        } else {
+                            console.error("Error al eliminar el artículo");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error en la solicitud AJAX:", error);
+                    });
+            });
+        });
+    });
+</script>
+
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+<!-- Fin Sistema de notificaciones Toast -->
+
+{% endblock %}

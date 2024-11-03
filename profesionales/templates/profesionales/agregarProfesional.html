@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Agregar profesional {% endblock %}
+
+{% block content %}
+<!-- Tab -->
+<div class="container mt-4 mb-4">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <h5 class="centered mb-2 mt-4">Profesionales asociados</h5>
+            {% if user.is_superuser %}
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'buscarProfesional' %}">Gestionar profesional</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active bg-light text-black disabled" href="{% url 'agregar_profesional' %}"
+                        aria-disabled="true">Agregar profesional</a>
+                </li>
+            </ul>
+            {% elif user.is_staff %}
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link text-black" href="{% url 'buscarProfesional' %}">Editar profesional</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active bg-light text-black disabled" href="{% url 'agregar_profesional' %}"
+                        aria-disabled="true">Agregar profesional</a>
+                </li>
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+<!-- Fin Tab -->
+
+<!-- Seccion para agregar profesionales -->
+<div class="container">
+    <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 text-center"> Agregar información correspondiente
+        </h4>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-4 mb-4 text-center">
+                <img src="{% static 'images/default.jpg' %}" class="img-thumbnail rounded mx-auto d-block shadow-sm"
+                    alt="" width="250" height="100">
+
+                <!-- File input agregar imagen -->
+                <h5 class="text-start mb-3 text-center mt-4"><i class="fa-solid fa-images me-1"></i> Imagen</h5>
+
+                <div class="input-group has-validation mt-3 text-center">
+                    <input type="file" class="form-control{% if form.foto.errors %} is-invalid{% endif %}" name="foto"
+                        id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" required>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                    {% for error in form.foto.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {{ profesionales.foto.errors }}
+                </div>
+
+                <h5 class="text-start mt-5 mb-3 text-center"><i class="fa-solid fa-table-list me-1"></i> Campos de
+                    interés</h5>
+
+                {% for campo in campos %}
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="{{ campo }}" id="validationCustom{{ campo }}"
+                        value="{{ form.campo.value }}" aria-describedby="inputGroupPrepend" placeholder="">
+                    <label for="validationCustom{{ campo }}" class="form-label">Campo de interés
+                        {{ forloop.counter }}</label>
+                </div>
+                {% endfor %}
+
+                <p class="fw-light text-start">Máximo 7 campos de interés</p>
+
+                <h5 class="text-center mt-5 mb-3"><i class="fa-solid fa-sitemap me"></i> Información adicional</h5>
+
+                <div class="form-floating has-validation mb-3">
+                    <input type="text" class="form-control" name="facultad" id="validationCustomFacultad"
+                        value="{{ profesional.facultad }}" aria-describedby="inputGroupPrepend" placeholder="" required>
+                    <label for="validationCustomFacultad" class="form-label">Facultad</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <div class="form-floating has-validation mb-3">
+                    <input type="text" class="form-control" name="grupo_investigacion"
+                        id="validationCustomGrupoInvestigacion" value="{{ profesional.grupo_investigacion }}"
+                        aria-describedby="inputGroupPrepend" placeholder="" required>
+                    <label for="validationCustomGrupoInvestigacion" class="form-label">Grupo de investigación</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <div class="form-floating has-validation mb-3">
+                    <input type="text" class="form-control" name="campus" id="validationCustomCampus"
+                        value="{{ profesional.campus }}" aria-describedby="inputGroupPrepend" placeholder="" required>
+                    <label for="validationCustomCampus" class="form-label">Campus</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-4 mb-4 text-center">
+                <!-- Entrada de nombre y apellido -->
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="nombre" id="validationCustomName"
+                                aria-describedby="inputGroupPrepend" placeholder="" required>
+                            <label for="validationCustomName" class="form-label">Nombres</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="apellido" id="validationCustomLast_name"
+                                aria-describedby="inputGroupPrepend" placeholder="" required>
+                            <label for="validationCustomLast_name" class="form-label">Apellidos</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada de Titulo y Universidad -->
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="titulo_universitario"
+                                id="validationCustomDegree" aria-describedby="inputGroupPrepend" placeholder=""
+                                required>
+                            <label for="validationCustomDegree" class="form-label">Título universitario</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating has-validation mb-2">
+                            <input type="text" class="form-control" name="universidad" id="validationCustomUniversity"
+                                aria-describedby="inputGroupPrepend" placeholder="" required>
+                            <label for="validationCustomUniversity" class="form-label">Universidad</label>
+                            <div class="invalid-feedback">
+                                Este campo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrada de Correo -->
+                <div class="form-floating has-validation mb-2">
+                    <input type="email" class="form-control" name="email" id="validationCustomEmail"
+                        aria-describedby="inputGroupPrepend" placeholder="" required>
+                    <label for="validationCustomEmail" class="form-label">Correo electrónico</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <!-- Entrada de Telefono -->
+                <div class="form-floating has-validation mb-3">
+                    <input type="text" class="form-control{% if form.telefono.errors %} is-invalid{% endif %}"
+                        name="telefono" id="validationCustomPhone" aria-describedby="inputGroupPrepend" placeholder=""
+                        required>
+                    <label for="validationCustomPhone" class="form-label">Teléfono</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                    {% for error in form.telefono.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {{ profesionales.telefono.errors }}
+                </div>
+
+                <!-- Entrada de enlace a google scholar -->
+                <div class="form-floating has-validation mb-2">
+                    <input type="text" class="form-control" name="enlace_a_scholar" id="validationCustomEnlace"
+                        aria-describedby="inputGroupPrepend" value="{{ profesional.enlace_a_scholar }}" placeholder=""
+                        required>
+                    <label for="validationCustomEnlace" class="form-label">Enlace al perfil en Google Scholar
+                        (Estructura: https://misitio.com)</label>
+                    <div class="invalid-feedback">
+                        Este campo es obligatorio.
+                    </div>
+                </div>
+
+                <!-- Articulos -->
+
+                <h5 class="text-center mt-5 mb-3"><i class="fa-solid fa-newspaper me-1"></i> Artículos</h5>
+
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="article-form mb-4 border rounded-3 bg-light shadow-sm py-3 px-3">
+                    <p class="text-center fw-light">Artículo número {{ forloop.counter }}</p>
+                    <hr class="mx-auto w-50">
+                    {{ form.as_p }}
+                </div>
+                {% endfor %}
+
+                <!-- Fin Articulos -->
+
+                <button type="submit" class="btn btn-success ">Crear</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<!-- Fin Seccion para agregar profesionales -->
+
+
+
+<script src="{% static 'js/agregarProfesional.js' %}"></script>
+{% endblock %}

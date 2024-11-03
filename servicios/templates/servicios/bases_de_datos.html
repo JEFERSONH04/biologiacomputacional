@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Bases de datos {% endblock %}
+
+{% block content %}
+
+<!-- Contenido -->
+<div class="container mt-5">
+    <h5 class="fw-bold mb-3">Servicios</h5>
+    <hr class="border border-primary border-2 shadow opacity-75 ms-0" style="width: 40px;">
+    <p class="fw-light">Bienvenido a nuestra sección de servicios. Aquí encontrarás una variedad de herramientas y bases
+        de datos que pueden ser útiles para tus investigaciones en biología computacional. Estos recursos están
+        disponibles para que los estudiantes las utilicen en sus proyectos académicos. Explora las opciones que
+        ofrecemos a continuación y aprovecha al máximo estas herramientas para potenciar tu trabajo en el laboratorio.
+    </p>
+</div>
+
+<!-- Contenido entre herramientas y bases de datos -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group">
+                <a href="{% url 'servicios' %}" class="list-group-item list-group-item-action" style="z-index: 1;">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Herramientas</h6>
+                        <span class="badge strong-bg-custom rounded-pill mt-2" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" data-bs-title="Herramientas disponibles">{{ cantidad_herramientas }}</span>
+                    </div>
+                    <p class="mb-1">Disponemos una amplia variedad de herramientas para
+                        apoyar tus investigaciones en biología computacional.</p>
+                </a>
+
+                <a href="{% url 'database' %}" class="list-group-item list-group-item-secondary list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Bases de datos</h6>
+                        <span class="badge strong-bg-custom rounded-pill" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" data-bs-title="Bases de datos disponibles">{{ cantidad_db }}</span>
+                    </div>
+                    <p class="mb-1">Disponemos de una amplia variedad de bases de datos para respaldar tus
+                        investigaciones en biología computacional.</p>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+            <div class="row mb-4 mt-3">
+                <div class="col d-flex align-items-center">
+                    <h5 class="">Bases de datos disponibles</h5>
+                </div>
+
+                <div class="col d-flex">
+                    <!-- Formulario de búsqueda -->
+                    <div class="container-fluid">
+                        <form class="d-flex" action="" method="GET">
+                            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search"
+                                name="q">
+                            <button class="btn btn-secondary" type="submit">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+                {% if form_submitted %}
+                <p class="fw-light">{{ cantidad_db_buscadas }} fuentes encontradas para <strong
+                        class="fw-bold">{{ request.GET.q }}</strong><a href="{% url 'database' %}" type="button"
+                        class="btn btn-outline-white custom-color ms-1" data-bs-toggle="tooltip"
+                        data-bs-placement="right" data-bs-title="Restablecer búsqueda"><i
+                            class="fa-solid fa-xmark"></i></a></p>
+                {% endif %}
+            </div>
+
+            <!-- Mostrar Bases de datos filtradas -->
+            {% for data in db %}
+            <div class="list-group">
+                <a href="{% url 'servicios_detalle' data.nombre %}" class="list-group-item list-group-item-action">{{ data.nombre }}<i
+                        class="fa-solid fa-database text-secondary ms-1" data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="Bases de datos"></i>
+                    <p><small class="text-body-secondary">{{ data.descrip }}</small></p>
+                </a>
+            </div>
+            {% empty %}
+            <p>No se encontraron Bases de Datos.</p>
+            {% endfor %}
+
+            <!-- Enlace para agregar nueva herramienta -->
+            {% if user.is_superuser or user.is_staff %}
+            <div class="list-group">
+                <a href="{% url 'nuevo_servicio' %}" class="list-group-item list-group-item-action">Agrega un nuevo servicio aquí <i
+                        class="fa-solid fa-circle-plus text-secondary ms-1"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Sistema de notificaciones Toast -->
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+
+{% endblock %}

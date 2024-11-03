@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Contactanos {% endblock %}
+
+{% block content %}
+
+<div class="barritapro">
+
+    <ul class="navbar-nav ms-auto d-flex flex-row">
+      {% url 'inicio' as inicio_url %}
+      {% url 'buscarProfesional' as buscarProfesional_url %}
+      {% url 'investigacion' as investigacion_url %}
+      {% url 'servicios' as servicios_url %}
+      {% url 'contactos' as contactos_url %}
+  
+      <a href="{% url 'inicio' %}" class="navbar-brand" style="padding-right: 100px;" data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Inicio">
+          <img src="{% static 'images/logo.png' %}" width="40" height="40">
+        </a>
+  
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == inicio_url %}active{% endif %}"
+          href="{% url 'inicio' %}">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == buscarProfesional_url %}active{% endif %}"
+          href="{% url 'buscarProfesional' %}">Profesionales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == investigacion_url %}active{% endif %}"
+          href="{% url 'investigacion' %}">Investigación</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == servicios_url %}active{% endif %}"
+          href="{% url 'servicios' %}">Servicios</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == contactos_url %}active{% endif %}"
+          href="{% url 'contactos' %}">Contacto</a>
+      </li>
+  
+      {% if user.is_authenticated %}
+      <div class="btn-group" style="padding-left: 5em;">
+        <button class="btn btn-white text-capitalize" type="button" data-bs-toggle="dropdown"
+          data-bd-display="static" data-bs-auto-close="outside" aria-expanded="false">
+          {{ user.first_name }} <img src="{{ user.profileadditionalinfo.image.url }}"
+            class="rounded-circle border border-black" style="width: 28px; height: 28px;">
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+          <li>
+            <div class="col-sm-12 px-2 d-flex flex-column justify-content-center">
+              <strong class="dropdown-header text-capitalize">{{ user.first_name }} {{ user.last_name }}
+                <p class="text-lowercase fw-light mb-0">{{ user.email }}</p>
+              </strong>
+            </div>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item px-4" href="{% url 'perfil' %}"><i
+                class="fa-solid fa-circle-info px-2 text-secondary"></i> Mi
+              perfil</a>
+          </li>
+          <li><a class="dropdown-item px-4" href="{% url 'cambio_contrasena' %}"><i
+                class="fa-solid fa-key px-2 text-secondary"></i> Cambiar
+              contraseña</a>
+          </li>
+          {% if user.is_superuser or user.is_staff %}
+          <li><a class="dropdown-item px-4" href="{% url 'gestion_usuarios' %}"><i
+                class="fa-solid fa-user-gear px-2 text-secondary"></i>
+              Gestionar usuarios</a></li>
+          {% endif %}
+          <li><a class="dropdown-item px-4 text-danger" href="{% url 'logout' %}"><i
+                class="fa-solid fa-arrow-right-from-bracket px-2"></i> Cerrar
+              sesión</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <li class="nav-item">
+        <a class="btn btn-white rounded-pill" href="{% url 'register' %}" role="button">
+          <span class="button-text">Registrarme</span>
+          <i class="fa-regular fa-user"></i>
+        </a>
+  
+        <a class="btn btn-warning rounded-pill shadow-sm" href="{% url 'signin' %}" role="button">
+          <span class="button-text">Iniciar sesión</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </a>
+      </li>
+      {% endif %}
+  
+    </ul>
+  
+  </div>
+
+<section class="text-center"
+    style="margin-top: 8em;">
+
+    <div class="container">
+        <h2 class="mt-4">Contactanos</h2>
+        <p class="mb-3">¿ Tienes alguna <strong class="strong-custom">pregunta</strong> ?<br>No temas a contactarnos. Te responderemos con la
+            mayor brevedad posible.</p>
+        <div class="row justify-content-center mt-5">
+            <div class="col-sm-12 col-md-10 col-lg-8">
+
+                <form class="needs-validation" novalidate method="POST"> {% csrf_token %}
+
+                    <!-- Entrada de nombre y apellido -->
+                    <div class="row g-2">
+                        <div class="col-md">
+                            <div class="form-floating has-validation mb-2">
+                                <input type="text" class="form-control" name="nombres" id="validationCustomName"
+                                    aria-describedby="inputGroupPrepend" placeholder="" required>
+                                <label for="validationCustomName" class="form-label">Nombres</label>
+                                <div class="invalid-feedback">
+                                    Este campo es obligatorio.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md">
+                            <div class="form-floating has-validation mb-2">
+                                <input type="text" class="form-control" name="apellidos" id="validationCustomLast_name"
+                                    aria-describedby="inputGroupPrepend" placeholder="" required>
+                                <label for="validationCustomLast_name" class="form-label">Apellidos</label>
+                                <div class="invalid-feedback">
+                                    Este campo es obligatorio.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entrada de Correo -->
+                    <div class="form-floating has-validation mb-2">
+                        <input type="email" class="form-control" name="email" id="validationCustomEmail"
+                            aria-describedby="inputGroupPrepend" placeholder="" required>
+                        <label for="validationCustomEmail" class="form-label">Correo electrónico</label>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <!-- Entrada de Telefono -->
+                    <div class="form-floating has-validation mb-2">
+                        <input type="text" class="form-control{% if form.telefono.errors %} is-invalid{% endif %}"
+                            name="telefono" id="validationCustomPhone" aria-describedby="inputGroupPrepend"
+                            placeholder="" required>
+                        <label for="validationCustomPhone" class="form-label">Teléfono</label>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                        {% for error in form.telefono.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                        {{ profesionales.telefono.errors }}
+                    </div>
+
+                    <!-- Entrada de opiniones -->
+                    <div class="form-floating has-validation">
+                        <textarea class="form-control shadow-sm" placeholder="" name="opiniones"
+                            id="validationCustomOpinions" aria-describedby="inputGroupPrepend" required
+                            style="height: 100px"></textarea>
+                        <label for="validationCustomOpinions">Opiniones</label>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <input class="btn btn-dark mt-4 mb-4" type="submit" value="Enviar">
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% for message in messages %}
+{% if message.tags == 'error' %}
+<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-circle-info"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    });
+</script>
+{% elif message.tags == 'success' %}
+<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
+    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fa-solid fa-check"></i>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        successToast.show();
+    });
+</script>
+{% endif %}
+{% endfor %}
+
+<script src="{% static 'js/contacto.js' %}"></script>
+{% endblock %}

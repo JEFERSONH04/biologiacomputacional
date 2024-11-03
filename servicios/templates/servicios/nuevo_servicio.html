@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Nuevo servicio {% endblock %}
+
+{% block content %}
+
+<!-- Contenido -->
+<div class="container mt-5">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'servicios' %}" class="custom-color">Servicios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nuevo servicio</li>
+        </ol>
+    </nav>
+
+    <div class="border border-2 rounded-4 text-bg-light px-4 py-2 mb-4 shadow-sm text-center">
+        
+        {% if form_errors %}
+        <div class="alert alert-danger mt-2" role="alert">
+            Por favor, corrige los siguientes errores:
+            <ul>
+                {% for field, errors in form_errors.items %}
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Entrada de nombre y seleccion de categoria -->
+            <div class="d-flex justify-content-center gap-2">
+                <div class="col-4">
+                    <div class="form-floating mt-4 mb-3">
+                        <input type="text" class="form-control" name="nombre" id="floatingInputNombre" placeholder=""
+                            required>
+                        <label for="floatingInputNombre">Nombre servicio</label>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-floating mt-4 mb-3">
+                        <select class="form-select" id="floatingSelect" name="categoria"
+                            aria-label="Floating label select example" required>
+                            <option value="" selected disabled>Selecciona una categoría</option>
+                            {% for categoria in categorias %}
+                            {% if servicio.categoria == categoria %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}" selected>
+                                {{ categoria.nombre_categoria }}
+                            </option>
+                            {% else %}
+                            <option value="{{ categoria.id }}" data-nombre="{{ categoria.nombre_categoria }}">
+                                {{ categoria.nombre_categoria }}
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <label for="floatingSelect">Categoría</label>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Descripcion -->
+            <div class="form-floating mb-3">
+                <textarea class="form-control" name="descrip" placeholder="" id="floatingTextarea" rows="4"
+                    style="height: 100px;" required></textarea>
+                <label for="floatingTextarea">Descripción</label>
+                <div class="invalid-feedback">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+
+            <div id="MostrarImagen" style="display: none;">
+                <!-- Imagen -->
+                <div class="border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+                    <div class="container col-4 mt-3 mb-3">
+                        <label for="formFileImg" class="form-label">Elegir imagen</label>
+                        <input class="form-control" name="imagen_servicio" type="file" id="formFileImg"
+                            accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entrada de video y archivos -->
+            <div class="d-flex justify-content-center border border-2 rounded-4 bg-white py-4 mt-4 shadow-sm">
+                <div class="d-flex gap-5 justify-content-center">
+                    <div id="MostrarVideoEnlace" class="col-5" style="display: none;">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="video_enlace"
+                                id="exampleFormControlInputEnlaceVideo" placeholder="">
+                            <label for="exampleFormControlInputEnlaceVideo">Enlace del video</label>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="mb-3">
+                            <div class="border border-1 py-2 px-3 rounded-4 mb-3">
+                                {% if servicio.archivo %}
+                                <div class="my-1">
+                                    <p>Archivo en la base de datos</p>
+                                    <i class="fa-regular fa-folder-open fs-1 mb-2"></i>
+                                    <p class="fw-light">{{ servicio.archivo }}</p>
+                                    <input type="checkbox" name="delete_file" value="{{ servicio.archivo }}"
+                                        class="btn-check" id="btn-check" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-check"><i
+                                            class="fa-regular fa-trash-can"></i> Eliminar este
+                                        archivo</label>
+                                </div>
+                                {% else %}
+                                <p>No se encontró ningún archivo en la base de datos</p>
+                                <i class="fa-solid fa-folder fs-1"></i>
+                                {% endif %}
+                            </div>
+
+                            <label for="formFile" class="form-label">Cargar archivos</label>
+                            <input class="form-control" id="formFile" name="archivo" type="file" accept=".zip,.rar">
+                            <p class="fw-light mt-1">Archivos permitidos ZIP o RAR</p>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Entrada para autor y licencia -->
+            <div class="border border-2 bg-white rounded-4 px-4 py-3 my-3 shadow-sm">
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="form-floating col-4 mb-3">
+                        <input type="text" class="form-control" name="desarrollador"
+                            id="exampleFormControldesarrolladorHE" placeholder="" required>
+                        <label for="exampleFormControldesarrolladorHE">Autor</label>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="form-floating col-4 mb-3">
+                        <input type="url" class="form-control" name="desarrollador_enlace"
+                            id="exampleFormControlEnlacePerfil" placeholder="">
+                        <label for="exampleFormControlEnlacePerfil">Enlace autor</label>
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2 d-flex justify-content-center align-items-center gap-3">
+                    <div class="form-floating col-4 mb-3">
+                        <input type="text" class="form-control" name="nombre_licencia" id="exampleFormControlLicencia"
+                            placeholder="" required>
+                        <label for="exampleFormControlLicencia">Licencia</label>
+                        <div class="invalid-feedback">
+                            Esta campo es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="form-floating col-4 mb-3">
+                        <input type="url" class="form-control" name="nombre_licencia_enlace"
+                            id="exampleFormControlEnlaceLicencia" placeholder="">
+                        <label for="exampleFormControlEnlaceLicencia">Enlace licencia</label>
+                        <div class="invalid-feedback">
+                            Verifica la estructura del enlace.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-success my-2">Guardar cambios</button>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+    var selectElement = document.getElementById('floatingSelect');
+    var divElement = document.getElementById('MostrarImagen');
+    var divElement1 = document.getElementById('MostrarVideoEnlace');
+
+    selectElement.addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        var nombreCategoria = selectedOption.getAttribute('data-nombre');
+        if (nombreCategoria === 'Herramienta') {
+            divElement.style.display = 'block';
+            divElement1.style.display = 'block';
+        } else {
+            divElement.style.display = 'none';
+            divElement1.style.display = 'none';
+        }
+    });
+</script>
+
+<script>
+    var forms = document.querySelectorAll('.needs-validation')
+
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+</script>
+
+{% endblock %}
