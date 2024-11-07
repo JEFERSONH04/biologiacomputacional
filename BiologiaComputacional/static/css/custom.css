@@ -92,14 +92,16 @@ body {
   border-radius: 40px;
 }
 
-.barritapro {
+.barritapro,
+.registrer {
   background-color: white;
   color: black;
   right: 20%;
 }
 
 .barrita li,
-.barritapro li {
+.barritapro li,
+.registrer li {
   padding-left: 20px;
 }
 
