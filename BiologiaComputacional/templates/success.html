@@ -1,0 +1,116 @@
+{% extends "base.html" %} {% load static %} {% block title %} Políticas de
+privacidad {% endblock %} {% block content %}
+
+<script>
+  // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
+  const fuenteTitulo = localStorage.getItem("fuente_titulo");
+  const fuenteTexto = localStorage.getItem("fuente_texto");
+
+  document.documentElement.style.setProperty("--fuente-titulo", fuenteTitulo);
+  document.documentElement.style.setProperty("--fuente-texto", fuenteTexto);
+</script>
+
+<div class="barritapro">
+
+    <ul class="navbar-nav ms-auto d-flex flex-row">
+      {% url 'inicio' as inicio_url %}
+      {% url 'buscarProfesional' as buscarProfesional_url %}
+      {% url 'investigacion' as investigacion_url %}
+      {% url 'servicios' as servicios_url %}
+      {% url 'contactos' as contactos_url %}
+  
+      <a href="{% url 'inicio' %}" class="navbar-brand" style="padding-right: 100px;" data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Inicio">
+          <img src="{% static 'images/logo.png' %}" width="40" height="40">
+        </a>
+  
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == inicio_url %}active{% endif %}"
+          href="{% url 'inicio' %}">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == buscarProfesional_url %}active{% endif %}"
+          href="{% url 'buscarProfesional' %}">Profesionales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == investigacion_url %}active{% endif %}"
+          href="{% url 'investigacion' %}">Investigación</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == servicios_url %}active{% endif %}"
+          href="{% url 'servicios' %}">Servicios</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == contactos_url %}active{% endif %}"
+          href="{% url 'contactos' %}">Contacto</a>
+      </li>
+  
+      {% if user.is_authenticated %}
+      <div class="btn-group" style="padding-left: 5em;">
+        <button class="btn btn-white text-capitalize" type="button" data-bs-toggle="dropdown"
+          data-bd-display="static" data-bs-auto-close="outside" aria-expanded="false">
+          {{ user.first_name }} <img src="{{ user.profileadditionalinfo.image.url }}"
+            class="rounded-circle border border-black" style="width: 28px; height: 28px;">
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+          <li>
+            <div class="col-sm-12 px-2 d-flex flex-column justify-content-center">
+              <strong class="dropdown-header text-capitalize">{{ user.first_name }} {{ user.last_name }}
+                <p class="text-lowercase fw-light mb-0">{{ user.email }}</p>
+              </strong>
+            </div>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item px-4" href="{% url 'perfil' %}"><i
+                class="fa-solid fa-circle-info px-2 text-secondary"></i> Mi
+              perfil</a>
+          </li>
+          <li><a class="dropdown-item px-4" href="{% url 'cambio_contrasena' %}"><i
+                class="fa-solid fa-key px-2 text-secondary"></i> Cambiar
+              contraseña</a>
+          </li>
+          {% if user.is_superuser or user.is_staff %}
+          <li><a class="dropdown-item px-4" href="{% url 'gestion_usuarios' %}"><i
+                class="fa-solid fa-user-gear px-2 text-secondary"></i>
+              Gestionar usuarios</a></li>
+          {% endif %}
+          <li><a class="dropdown-item px-4 text-danger" href="{% url 'logout' %}"><i
+                class="fa-solid fa-arrow-right-from-bracket px-2"></i> Cerrar
+              sesión</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <li class="nav-item">
+        <a class="btn btn-white rounded-pill" href="{% url 'register' %}" role="button">
+          <span class="button-text">Registrarme</span>
+          <i class="fa-regular fa-user"></i>
+        </a>
+  
+        <a class="btn btn-warning rounded-pill shadow-sm" href="{% url 'signin' %}" role="button">
+          <span class="button-text">Iniciar sesión</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </a>
+      </li>
+      {% endif %}
+  
+    </ul>
+  
+  </div>
+
+<div class="container col-md-8 text-center py-5" style="margin-top: 8em">
+  <img
+    src="{% static 'images/logo-color.png' %}"
+    class="mb-4"
+    width="90"
+    height="75"
+  />
+  <div class="container border border-2 shadow rounded-5 py-5">
+    <div class="container px-5">
+      <h2 class="mb-5">Se ha cambiado la tipografia</h2>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

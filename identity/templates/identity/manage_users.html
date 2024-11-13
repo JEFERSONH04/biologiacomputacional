@@ -1,148 +1,225 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} {% load static %} {% block title %} Gestionar usuarios
+{% endblock %} {% block content %}
 
-{% block title %} Gestionar usuarios {% endblock %}
+<script>
+  // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
+  const fuenteTitulo = localStorage.getItem("fuente_titulo");
+  const fuenteTexto = localStorage.getItem("fuente_texto");
 
-{% block content %}
+  document.documentElement.style.setProperty("--fuente-titulo", fuenteTitulo);
+  document.documentElement.style.setProperty("--fuente-texto", fuenteTexto);
+</script>
+
+<div class="barritapro" style="left: 30%; width: 44%;">
+
+    <ul class="navbar-nav ms-auto d-flex flex-row">
+      {% url 'inicio' as inicio_url %}
+      {% url 'buscarProfesional' as buscarProfesional_url %}
+      {% url 'investigacion' as investigacion_url %}
+      {% url 'servicios' as servicios_url %}
+      {% url 'contactos' as contactos_url %}
+  
+      <a href="{% url 'inicio' %}" class="navbar-brand" style="padding-right: 100px;" data-bs-toggle="tooltip" data-bs-placement="right"
+          data-bs-title="Inicio">
+          <img src="{% static 'images/logo.png' %}" width="40" height="40">
+        </a>
+  
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == inicio_url %}active{% endif %}"
+          href="{% url 'inicio' %}">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == buscarProfesional_url %}active{% endif %}"
+          href="{% url 'buscarProfesional' %}">Profesionales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == investigacion_url %}active{% endif %}"
+          href="{% url 'investigacion' %}">Investigación</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == servicios_url %}active{% endif %}"
+          href="{% url 'servicios' %}">Servicios</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == contactos_url %}active{% endif %}"
+          href="{% url 'contactos' %}">Contacto</a>
+      </li>
+  
+    </ul>
+  
+  </div>
 
 <div class="container my-3">
+  <div class="mb-5 mt-5"></div>
 
-    <div class="mb-5 mt-5">
+  <div class="row" style="margin-top: 8em">
+    <div class="col-md-4">
+      <div
+        class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2"
+      >
+        <div class="card-body text-center">
+          <div class="mt-2">
+            <img
+              src="{{ user.profileadditionalinfo.image.url }}"
+              class="rounded-circle border border-2 border-secondary shadow img-fluid"
+              style="width: 100px"
+            />
+          </div>
+          <p class="text-muted">@{{ user.username }}</p>
+          {% if user.is_superuser %}
+          <span class="badge rounded-1 text-bg-success mb-4"
+            >Super usuario</span
+          >
+          {% endif %} {% if user.is_staff %}
+          <span class="badge rounded-1 text-bg-primary mb-4"
+            >Administrador</span
+          >
+          {% endif %}
+          <h4 class="mb-2 text-capitalize">
+            {{ user.first_name }} {{ user.last_name }}
+          </h4>
+          <p class="text-muted mb-2">{{ user.email }}</p>
+          <p class="text-muted">
+            {{ user.profileadditionalinfo.phone_number }}
+          </p>
 
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
-                <div class="card-body text-center">
-                    <div class="mt-2">
-                        <img src="{{ user.profileadditionalinfo.image.url }}"
-                            class="rounded-circle border border-2 border-secondary shadow img-fluid"
-                            style="width: 100px;">
-                    </div>
-                    <p class="text-muted">@{{ user.username }}</p>
-                    {% if user.is_superuser %}
-                    <span class="badge rounded-1 text-bg-success mb-4">Super usuario</span>
-                    {% endif %}
-                    {% if user.is_staff %}
-                    <span class="badge rounded-1 text-bg-primary mb-4">Administrador</span>
-                    {% endif %}
-                    <h4 class="mb-2 text-capitalize">{{ user.first_name }} {{ user.last_name }} </h4>
-                    <p class="text-muted mb-2"> {{ user.email }} </p>
-                    <p class="text-muted"> {{ user.profileadditionalinfo.phone_number }} </p>
-
-                    <!-- Pills navs -->
-                    <ul class="nav nav-justified mt-4 mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link rounded text-bg-danger" href="{% url 'logout' %}"><i
-                                    class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
-                        </li>
-                    </ul>
-                    <!-- Pills navs -->
-                </div>
-
-            </div>
+          <!-- Pills navs -->
+          <ul class="nav nav-justified mt-4 mb-2">
+            <li class="nav-item">
+              <a
+                class="nav-link rounded text-bg-danger"
+                href="{% url 'logout' %}"
+                ><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar
+                sesión</a
+              >
+            </li>
+          </ul>
+          <!-- Pills navs -->
         </div>
+      </div>
+    </div>
 
-        <div class="col-md-8">
+    <div class="col-md-8">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link text-black" href="{% url 'perfil' %}"
+            ><i class="fa-solid fa-circle-info text-secondary me-1"></i>
+            Información personal</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" href="{% url 'cambio_contrasena' %}"
+            ><i class="fa-solid fa-key text-secondary me-1"></i> Cambiar
+            contraseña</a
+          >
+        </li>
+        {% if user.is_superuser or user.is_staff %}
+        <li class="nav-item">
+          <a
+            class="nav-link active bg-light text-black disabled"
+            aria-disabled="true"
+            href="{% url 'gestion_usuarios' %}"
+            ><i class="fa-solid fa-user-gear text-secondary me-1"></i> Gestionar
+            usuarios</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+      <!-- Fin Tabs -->
 
-            <!-- Tabs -->
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link text-black" href="{% url 'perfil' %}"><i
-                            class="fa-solid fa-circle-info text-secondary me-1"></i>
-                        Información personal</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black" href="{% url 'cambio_contrasena' %}"><i
-                            class="fa-solid fa-key text-secondary me-1"></i>
-                        Cambiar contraseña</a>
-                </li>
-                {% if user.is_superuser or user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link active bg-light text-black disabled" aria-disabled="true"
-                        href="{% url 'gestion_usuarios' %}"><i class="fa-solid fa-user-gear text-secondary me-1"></i>
-                        Gestionar usuarios</a>
-                </li>
-                {% endif %}
-            </ul>
-            <!-- Fin Tabs -->
+      <div
+        class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2"
+      >
+        <div class="card-body text-center">
+          <h5 class="mb-3 mt-2">Gestionar información</h5>
 
-            <div class="card border rounded-2 shadow-sm rounded-5 rounded-top pb-3 mb-2">
-                <div class="card-body text-center">
-                    <h5 class="mb-3 mt-2">Gestionar información</h5>
-
-                    <!-- DataTable -->
-                    <div class="table-responsive">
-                        <table id="info" class="table">
-                            <caption>
-                                Información correspondiente
-                            </caption>
-                            <thead>
-                                <tr>
-                                    <th class="centered">Usuario</th>
-                                    <th class="centered">Nombre</th>
-                                    <th class="centered">Permisos</th>
-                                    <th class="centered">Ver detalles</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Fin DataTable -->
-
-                </div>
-            </div>
+          <!-- DataTable -->
+          <div class="table-responsive">
+            <table id="info" class="table">
+              <caption>
+                Información correspondiente
+              </caption>
+              <thead>
+                <tr>
+                  <th class="centered">Usuario</th>
+                  <th class="centered">Nombre</th>
+                  <th class="centered">Permisos</th>
+                  <th class="centered">Ver detalles</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <!-- Fin DataTable -->
         </div>
-
+      </div>
     </div>
+  </div>
 
-    <div class="mb-5 mt-5">
-
-    </div>
-
+  <div class="mb-5 mt-5"></div>
 </div>
 
 <!-- Sistema de notificaciones Toast -->
-{% for message in messages %}
-{% if message.tags == 'error' %}
-<div class="toast align-items-center bg-danger text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
-    aria-atomic="true" id="errorToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
-    <div class="d-flex">
-        <div class="toast-body">
-            <i class="fa-solid fa-circle-info"></i>
-            {{ message }}
-        </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+{% for message in messages %} {% if message.tags == 'error' %}
+<div
+  class="toast align-items-center bg-danger text-white border-0 mt-1 me-1"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  id="errorToast"
+  style="position: absolute; top: 60px; right: 10px; z-index: 1000"
+>
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-circle-info"></i>
+      {{ message }}
     </div>
+    <button
+      type="button"
+      class="btn-close me-2 m-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-        errorToast.show();
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+    var errorToast = new bootstrap.Toast(document.getElementById("errorToast"));
+    errorToast.show();
+  });
 </script>
 {% elif message.tags == 'success' %}
-<div class="toast align-items-center bg-success text-white border-0 mt-1 me-1" role="alert" aria-live="assertive"
-    aria-atomic="true" id="successToast" style="position: absolute; top: 60px; right: 10px; z-index: 1000;">
-    <div class="d-flex">
-        <div class="toast-body">
-            <i class="fa-solid fa-check"></i>
-            {{ message }}
-        </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+<div
+  class="toast align-items-center bg-success text-white border-0 mt-1 me-1"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  id="successToast"
+  style="position: absolute; top: 60px; right: 10px; z-index: 1000"
+>
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-check"></i>
+      {{ message }}
     </div>
+    <button
+      type="button"
+      class="btn-close me-2 m-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-        successToast.show();
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+    var successToast = new bootstrap.Toast(
+      document.getElementById("successToast")
+    );
+    successToast.show();
+  });
 </script>
-{% endif %}
-{% endfor %}
+{% endif %} {% endfor %}
 <!-- Fin Sistema de notificaciones Toast -->
 
 <script src="{% static 'js/manage_users.js' %}"></script>

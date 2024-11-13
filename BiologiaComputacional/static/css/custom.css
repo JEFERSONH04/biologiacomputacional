@@ -1,16 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Satisfy&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=DM+Serif+Text:ital@0;1&family=Satisfy&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=DM+Serif+Text:ital@0;1&family=Satisfy&display=swap");
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--fuente-titulo);
+  color: #00c6c7;
+}
+
+p,
+strong,
+em,
+br,
+ul,
+li,
+a {
+  font-family: var(--fuente-texto);
+}
 
 h5 {
-  font-family: "Satisfy", cursive;
   font-size: 40px;
   color: #00c6c7;
 }
 
 h4 {
-  font-family: "Satisfy", cursive;
-  font-size: 40px;
   color: #009092;
 }
 
@@ -59,7 +71,6 @@ body {
 
 .custom-boton {
   color: rgb(255, 255, 255);
-  background-color: #75dedf;
   border-radius: 44px;
   padding-top: 16px;
   height: 60px;
@@ -67,7 +78,7 @@ body {
 }
 
 .cardbox a {
-  font-family: "Satisfy", cursive;
+  font-family: "Arial", cursive;
   font-size: 10px;
   color: #00c6c7;
 }
@@ -153,7 +164,7 @@ body {
 .footer-custom,
 .footer-custom a,
 .footer-custom h5 {
-  font-family: "DM Serif Text", serif;
+  font-family: "Arial", serif;
   color: #ffffff;
   background-color: #009092;
   border-radius: 44px 44px 0px 0px;

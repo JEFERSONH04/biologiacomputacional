@@ -64,6 +64,8 @@ def agregar_profesional(request):
     if request.method == 'POST':
         prof_form = ProfileFormProfessional(request.POST, request.FILES)
         formset = ArticleFormSet(request.POST)
+        context = { 'fuente_titulo': fuente_titulo, 'fuente_texto': fuente_texto, } 
+
 
         if prof_form.is_valid() and formset.is_valid():
             nuevo_prof = prof_form.save(commit=False)

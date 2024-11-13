@@ -4,6 +4,17 @@
 {% block title %} Profesional {{ profesional.nombre }} {% endblock %}
 
 {% block content %}
+
+<script>
+
+    // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
+    const fuenteTitulo = localStorage.getItem('fuente_titulo');
+    const fuenteTexto = localStorage.getItem('fuente_texto');
+  
+    document.documentElement.style.setProperty('--fuente-titulo', fuenteTitulo);
+    document.documentElement.style.setProperty('--fuente-texto', fuenteTexto);
+  </script>
+  
 <div class="container my-4">
 
     <h4 class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-5 text-center"><a class="custom-color"

@@ -2,7 +2,15 @@
 {%endblock%} {% block content %}
 
 
+<script>
+  // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
 
+  const fuenteTitulo = localStorage.getItem('fuente_titulo');
+  const fuenteTexto = localStorage.getItem('fuente_texto');
+
+  document.documentElement.style.setProperty('--fuente-titulo', fuenteTitulo);
+  document.documentElement.style.setProperty('--fuente-texto', fuenteTexto);
+</script>
 
 
 <div class="inicio d-flex flex-column  justify-content-center align-items-center ps-5">
@@ -104,19 +112,19 @@
       <div class="container">
 
         
-        <h1 class="fw-bold font-monospace text-center mb-4">
+        <h1 class="fw-bold text-center mb-4" style="color: white;">
           Laboratorio de Biología Computacional
         </h1>
 
         {% if not user.is_authenticated %}
-        <p class="fw-light font-monospace text-center fs-5">
+        <p class="fw-light text-center fs-5">
           ¡Descubra cómo nuestras
           <strong class="strong-custom fw-bold">herramientas</strong> y
           <strong class="strong-custom fw-bold">recursos</strong> pueden
           impulsar su investigación en biología computacional!
         </p>
         {% else %}
-        <p class="fw-light font-monospace text-center fs-5">
+        <p class="fw-light text-center fs-5">
           ¿Tienes alguna pregunta, comentario o sugerencia? ¡Contáctanos!
           Estamos siempre disponibles y listos para atenderte.
         </p>
@@ -141,6 +149,7 @@
             href="{% url 'contactos' %}"
             type="button"
             class="btn btn-primary custom-boton"
+            style="  background-color: #00c6c7; border: #7affff 5px solid;"
             >Contactanos</a
           >
         </div>
@@ -160,10 +169,69 @@
   </div>
 </div>
 
+
+
+
 <div class="col-md-12">
   <div class="container">
     <div class="row flex-row">
-      <h4 class="text-center fw-bold mb-3 p-5">¿Qué puedo encontrar en BioCOM?</h4>
+      <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 2em 0;" class="text-center">
+        <h2 class="text-center fw-bold mb-3" style="padding: 5px 0 5px 5px 5px;">¿Qué puedo encontrar en BioCOM?</h2>
+        <div class="dropend ms-1 text-center" data-bs-toggle="tooltip" data-bs-placement="top">
+                <button class="btn btn-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <ul class="dropdown-menu text-center" style="width: 350px; padding: 15px;">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <h3 style="color: #00c6c7">Cambiar tipografia</h3>
+                    <div class="form-floating">
+                      <select
+                        class="form-select"
+                        id="floatingSelectFonts"
+                        aria-label="Floating label select example"
+                        name="fuente_titulo"
+                        style="border-radius: 40px; margin-top: 10px"
+                      >
+                        <option selected>Selecciona la tipografia</option>
+                        {% for tipografias in tipografias %}
+                        <option value="{{tipografias.fuente_titulo}}">
+                          {{tipografias.fuente_titulo}}
+                        </option>
+                        {% endfor %}
+                      </select>
+                      <label for="floatingSelect">Titulos</label>
+                    </div>
+                  
+                    <div class="form-floating">
+                      <select
+                        class="form-select"
+                        id="floatingSelectFonts"
+                        aria-label="Floating label select example"
+                        name="fuente_texto"
+                        style="border-radius: 40px; margin-top: 10px"
+                      >
+                        <option selected>Selecciona la tipografia</option>
+                        {% for tipografias in tipografias %}
+                        <option value="{{tipografias.fuente_texto}}">
+                          {{tipografias.fuente_texto}}
+                        </option>
+                        {% endfor %}
+                      </select>
+                      <label for="floatingSelect">Texto</label>
+                    </div>
+                    <input
+                      type="submit"
+                      value="Actualizar tipografia"
+                      class="btn btn-success mt-4 mb-2"
+                      style="border-radius: 40px; background-color: #00c6c7"
+                    />
+                  </form>
+                    
+                </ul>
+            </div>
+      </div>
+      
       <!-- Imagen 1 -->
       <div
         class="cardbox col-md-4 my-2 py-2 d-flex flex-column text-center align-items-center"

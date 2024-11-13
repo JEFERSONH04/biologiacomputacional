@@ -4,8 +4,8 @@ from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from identity.models import AdditionalUserInfoForm
-from BiologiaComputacional.forms import UsuarioForm, RegisterCustomForm, ProfileForm, ProfileAdditionalInfo
+from identity.models import AdditionalUserInfoForm, Tipografias
+from BiologiaComputacional.forms import UsuarioForm, RegisterCustomForm, ProfileForm, ProfileAdditionalInfo, Tipografias
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django import forms
@@ -32,15 +32,14 @@ from django.utils.decorators import method_decorator
 
 # Logica para mostrar un profesional
 
-
 @method_decorator(login_required, name='dispatch')
 class ProfileView(View):
 
     template_name = "identity/profile.html"
 
+
     def get(self, request, *args, **kwargs):
         user = request.user
-
         # Intenta obtener la información adicional del usuario
         try:
             additional_info = ProfileAdditionalInfo.objects.get(user=user)
@@ -105,16 +104,22 @@ class ProfileView(View):
             messages.error(request, 'Error al actualizar la información.')
 
         return redirect('perfil')
+    
+    
 
 
 # Logica para registrar un usuario
 def register(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:  
         return redirect('inicio')
+
+
 
     if request.method == 'POST':
         user_form = RegisterCustomForm(request.POST)
         profile_form = ProfileForm(request.POST, request.FILES)
+              
+
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
@@ -236,11 +241,13 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 def signin(request):
     if request.user.is_authenticated:
-        return redirect('inicio')
 
+        return redirect('inicio')
+    
     messages_list = []
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, request.POST)
+
 
         if form.is_valid():
             username = form.cleaned_data['username']

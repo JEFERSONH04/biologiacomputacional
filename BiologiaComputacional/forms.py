@@ -1,14 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from identity.models import ProfileAdditionalInfo
+from identity.models import ProfileAdditionalInfo, Tipografias
 from profesionales.models import InformacionProfesional, Articulos
 from servicios.models import Categoria, Servicio
 from django.contrib.auth.forms import UserChangeForm
 import re
 from investigacion.models import CategoriaI, Investigacion, Carrusel
 
-# Formulario de contacto
+
 
 
 class FormularioContacto(forms.Form):
@@ -180,3 +180,10 @@ class CarruselForm(forms.ModelForm):
         model = Carrusel
         fields = ['titulo', 'texto1', 'texto2',
                   'texto3', 'imagen1', 'imagen2', 'imagen3']
+    
+
+class Tipografia(forms.ModelForm):
+
+    class Meta: 
+        model = Tipografias
+        fields = ['fuente_texto', 'fuente_titulo', 'font_size']

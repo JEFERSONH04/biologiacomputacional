@@ -1,6 +1,16 @@
 {% extends "base.html" %} {% load static %} {% block title %} Buscar profesional
 {% endblock %} {% block content %}
 
+<script>
+
+  // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
+  const fuenteTitulo = localStorage.getItem('fuente_titulo');
+  const fuenteTexto = localStorage.getItem('fuente_texto');
+
+  document.documentElement.style.setProperty('--fuente-titulo', fuenteTitulo);
+  document.documentElement.style.setProperty('--fuente-texto', fuenteTexto);
+</script>
+
 <div class="barritapro">
 
   <ul class="navbar-nav ms-auto d-flex flex-row">

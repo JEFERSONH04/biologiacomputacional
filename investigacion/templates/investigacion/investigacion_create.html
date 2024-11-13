@@ -5,6 +5,17 @@
 
 {% block content %}
 
+<script>
+
+    // Recuperar los datos del almacenamiento local y aplicarlos a las variables CSS
+    const fuenteTitulo = localStorage.getItem('fuente_titulo');
+    const fuenteTexto = localStorage.getItem('fuente_texto');
+  
+    document.documentElement.style.setProperty('--fuente-titulo', fuenteTitulo);
+    document.documentElement.style.setProperty('--fuente-texto', fuenteTexto);
+  </script>
+  
+
 <!-- Contenido -->
 <div class="container my-5">
 
