@@ -177,6 +177,7 @@
     <div class="row flex-row">
       <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 2em 0;" class="text-center">
         <h2 class="text-center fw-bold mb-3" style="padding: 5px 0 5px 5px 5px;">¿Qué puedo encontrar en BioCOM?</h2>
+        {% if user.is_authenticated %} 
         <div class="dropend ms-1 text-center" data-bs-toggle="tooltip" data-bs-placement="top">
                 <button class="btn btn-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-pen"></i>
@@ -230,6 +231,7 @@
                     
                 </ul>
             </div>
+            {% endif %}
       </div>
       
       <!-- Imagen 1 -->
